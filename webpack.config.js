@@ -9,7 +9,7 @@ const path = require('path')
  */
 const config = (dev, name) => ({
     mode: dev ? 'development' : 'production',
-    entry: './src/main.tsx',
+    entry: ['./src/main.tsx', './src/default.css'],
     output: {
         filename: `static/${name}.js`,
         path: path.resolve(__dirname, 'public'),
