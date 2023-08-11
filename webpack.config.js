@@ -13,6 +13,7 @@ const config = (dev, name) => ({
     output: {
         filename: `static/${name}.js`,
         path: path.resolve(__dirname, 'public'),
+        clean: true,
     },
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
