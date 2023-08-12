@@ -32,8 +32,12 @@ export default function Introduction() {
     return (
         <div className={style.holder}>
             <div className={style.textHolder}>
-                <span>{text}</span>
-                <div className={style.cursor}></div>
+                <span>
+                    {text}
+                    <div className={style.cursorHolder}>
+                        <div className={style.cursor}></div>
+                    </div>
+                </span>
             </div>
         </div>
     )

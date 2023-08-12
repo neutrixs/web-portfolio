@@ -27,8 +27,16 @@
     align-items: center;
 }
 
+.cursorHolder {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    height: 1em;
+    width: 0.1em;
+}
+
 .cursor {
-    display: inline-block;
     width: 0.1em;
     background-color: white;
 
