@@ -21,3 +21,52 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.a {
+    width: 100%;
+    height: calc(100vh - 3em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.5em 0;
+}
+@keyframes b {
+    0% {
+        background-color: #ffffff;
+    }
+    50%,
+    100% {
+        background-color: #808080;
+    }
+}
+.c {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border-radius: 0.5em;
+    background-color: #202020;
+    color: #202020;
+    animation: b 0.5s infinite linear alternate;
+    animation-delay: 0.25s;
+}
+.c::before,
+.c::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 0.5em;
+    background-color: #202020;
+    color: #202020;
+    animation: b 0.5s infinite alternate;
+}
+.c::before {
+    left: -1.5em;
+    animation-delay: 0s;
+}
+.c::after {
+    left: 1.5em;
+    animation-delay: 0.5s;
+}
