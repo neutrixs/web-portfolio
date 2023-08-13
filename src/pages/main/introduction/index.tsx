@@ -61,16 +61,14 @@ export default function Introduction() {
 
     return (
         <div className={style.holder}>
-            <div className={style.textHolder}>
-                <Scrolldown reverse={false} show={show} />
-                <span className={style.text}>
-                    {text}
-                    <div className={style.cursorHolder}>
-                        <div className={style.cursor}></div>
-                    </div>
-                </span>
-                <Scrolldown reverse={true} show={show} />
-            </div>
+            <Scrolldown reverse={false} show={show} />
+            <span className={style.text}>
+                {text}
+                <div className={style.cursorHolder}>
+                    <div className={style.cursor}></div>
+                </div>
+            </span>
+            <Scrolldown reverse={true} show={show} />
         </div>
     )
 }

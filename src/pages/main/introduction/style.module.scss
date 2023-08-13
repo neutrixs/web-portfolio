@@ -1,10 +1,11 @@
 .holder {
-    width: 100vw;
-    height: 100vh;
-
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
 
     .text {
         font-family: 'JetBrains Mono', monospace;
@@ -18,16 +19,6 @@
             font-size: 3em;
         }
     }
-}
-
-.textHolder {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
 }
 
 .scrolldownHolder {
