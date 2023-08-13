@@ -31,17 +31,27 @@
 }
 
 .scrolldownHolder {
-    position: relative;
+    display: flex;
+    overflow-x: hidden;
     width: 100vw;
-    height: 3em;
     opacity: 0;
     transition: opacity 5s;
 
+    justify-content: left;
+    flex-direction: row;
+
     span {
-        font-family: 'Silkscreen';
         white-space: nowrap;
+        font-family: 'Silkscreen';
         font-size: 2em;
-        position: absolute;
+        animation-duration: 15s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+
+    &.reverse {
+        justify-content: right;
+        flex-direction: row-reverse;
     }
 }
 
@@ -69,5 +79,23 @@
     }
     25% {
         height: 0;
+    }
+}
+
+@keyframes movingText1 {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes movingText2 {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%);
     }
 }

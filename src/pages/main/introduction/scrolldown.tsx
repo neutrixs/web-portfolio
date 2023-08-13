@@ -22,39 +22,33 @@ interface textProps {
 export default function Scrolldown({ reverse, show }: props) {
     const { width } = useDimension()
     const [text, setText] = useState('')
-    const [offset, setOffset] = useState(0)
+    const [textApplied, setTextApplied] = useState(false)
 
     useEffect(() => {
         const repeatTimes = Math.ceil(width / textWidth)
         setText(baseText.repeat(repeatTimes))
     }, [width])
 
+    // for some reasons, i can't apply the animation to the CSS directly
+    // because it would cause the element to move very slowly (on chrome windows)
+    // maybe it's the issue with the devtools, but I'm not sure
     useEffect(() => {
-        if (offset >= getBaseOffset(1)) {
-            setOffset(0)
-        }
-    }, [offset])
+        setTextApplied(true)
+    }, [text])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setOffset((prev) => prev + speed / 200)
-        }, 5)
+    function applyAnimation() {
+        if (!show || !textApplied) return ''
 
-        return () => clearInterval(interval)
-    }, [])
-
-    function getBaseOffset(n: number) {
-        return n * textWidth * (text.split('SCROLLDOWN').length - 1)
+        return reverse ? style.movingText2 : style.movingText1
     }
 
     return (
-        <div className={style.scrolldownHolder} style={{ opacity: show ? 1 : 0 }}>
-            <Text {...{ text, reverse, baseOffset: getBaseOffset(0), offset }} />
-            <Text {...{ text, reverse, baseOffset: getBaseOffset(1), offset }} />
+        <div
+            className={style.scrolldownHolder + ' ' + (reverse ? style.reverse : '')}
+            style={{ opacity: show ? 1 : 0 }}
+        >
+            <span style={{ animationName: applyAnimation() }}>{text.substring(2) + ' SC'}</span>
+            <span style={{ animationName: applyAnimation() }}>{text.substring(2) + ' SC'}</span>
         </div>
     )
-}
-
-function Text({ text, reverse, baseOffset, offset }: textProps) {
-    return <span style={{ [reverse ? 'right' : 'left']: baseOffset - offset }}>{text}</span>
 }
