@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Introduction from './introduction'
 import Projects from './projects'
 import styles from './style.module.scss'
@@ -6,14 +6,14 @@ import arrow from '../../icons/arrow.svg'
 
 export default function MainPage() {
     const isTouchDevice = 'ontouchstart' in document.documentElement
-    const parent = useRef<HTMLDivElement>(null)
-    const parentHeight = parent.current?.offsetHeight || 0
+    const [parent, setParent] = useState<HTMLDivElement | null>(null)
+    const parentHeight = parent?.offsetHeight || 0
 
     const [currentSlide, setCurrentSlide] = useState(0)
-    const slides = useRef<React.ReactNode[]>([
-        <Introduction key="introduction" />,
-        <Projects key="projects" inView={currentSlide == 1} />,
-    ])
+    const slides: React.ReactNode[] = [
+        <Introduction key="introduction" height={parentHeight} />,
+        <Projects key="projects" inView={currentSlide == 1} height={parentHeight} />,
+    ]
 
     useEffect(() => {
         function wheel(event: WheelEvent) {
@@ -44,7 +44,7 @@ export default function MainPage() {
     function scroll(inc: number) {
         setCurrentSlide((current) => {
             const newSlidePos = current + inc
-            if (newSlidePos >= 0 && newSlidePos < slides.current.length) {
+            if (newSlidePos >= 0 && newSlidePos < slides.length) {
                 return newSlidePos
             }
             return current
@@ -65,12 +65,12 @@ export default function MainPage() {
     }
 
     return (
-        <div className={styles.fixedContainer} ref={parent}>
+        <div className={styles.fixedContainer} ref={setParent}>
             <div
                 className={styles.slidesContainer}
-                style={{ transform: `translateY(${-currentSlide * 100}%)` }}
+                style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
             >
-                {slides.current}
+                {slides}
             </div>
             {isTouchDevice ? scrollAccessibility() : null}
         </div>

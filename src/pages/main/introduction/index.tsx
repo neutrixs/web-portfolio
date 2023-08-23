@@ -11,7 +11,11 @@ const letterTiming: { [name: string]: number } = {
     '?': 300,
 }
 
-export default function Introduction() {
+interface props {
+    height: number
+}
+
+export default function Introduction({ height }: props) {
     const [text, setText] = useState('')
     const [show, setShow] = useState(false)
     const textRef = useRef(text)
@@ -60,7 +64,7 @@ export default function Introduction() {
     }
 
     return (
-        <div className={style.holder}>
+        <div className={style.holder} style={{ height: height.toString() + 'px' }}>
             <Scrolldown reverse={false} show={show} />
             <span className={style.text}>
                 {text}
