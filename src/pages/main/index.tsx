@@ -7,7 +7,7 @@ import arrow from '../../icons/arrow.svg'
 export default function MainPage() {
     const isTouchDevice = 'ontouchstart' in document.documentElement
     const [parent, setParent] = useState<HTMLDivElement | null>(null)
-    const parentHeight = parent?.offsetHeight || 0
+    const [parentHeight, setParentHeight] = useState(0)
 
     const [currentSlide, setCurrentSlide] = useState(0)
     const slides: React.ReactNode[] = [
@@ -40,6 +40,18 @@ export default function MainPage() {
             document.removeEventListener('keydown', keydown)
         }
     }, [])
+
+    useEffect(() => {
+        if (!parent) return
+
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                setParentHeight(entry.contentRect.height)
+            }
+        })
+        observer.observe(parent)
+        return () => observer.unobserve(parent)
+    }, [parent])
 
     function scroll(inc: number) {
         setCurrentSlide((current) => {
