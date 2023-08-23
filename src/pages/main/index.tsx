@@ -4,10 +4,7 @@ import styles from './style.module.scss'
 
 export default function MainPage() {
     const [currentSlide, setCurrentSlide] = useState(0)
-    const slides = useRef<React.ReactNode[]>([
-        <Introduction key="introduction" />,
-        <div key="dick" />,
-    ])
+    const slides = useRef<React.ReactNode[]>([<Introduction key="introduction" />])
 
     useEffect(() => {
         function wheel(event: WheelEvent) {
