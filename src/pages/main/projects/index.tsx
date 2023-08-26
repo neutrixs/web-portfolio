@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './style.module.scss'
 
 interface props {
@@ -7,9 +7,15 @@ interface props {
 }
 
 export default function Projects({ inView, height }: props) {
+    const [show, setShow] = useState(' ')
+
+    useEffect(() => {
+        setTimeout(() => setShow(' ' + (inView ? style.show : '')), 500)
+    }, [inView])
+
     return (
         <div className={style.container} style={{ height: height.toString() + 'px' }}>
-            <div></div>
+            <p className={style.title + show}>My Projects</p>
         </div>
     )
 }
