@@ -1,4 +1,5 @@
 import spotifinfo from '../../../img/spotifinfo.webp'
+import findpokemon from '../../../img/findpokemon.webp'
 
 export interface project {
     name: string
@@ -15,5 +16,11 @@ export const projects: projectsList = [
             'Stats for spotify, basically. See your now playing, recently played, top tracks or artists over the last month, 6 months, or all time.',
         url: 'https://spotifinfo.neutrixs.my.id',
         imgPath: spotifinfo,
+    },
+    {
+        name: 'Find Pokemon',
+        description: 'Loads data from Poke API, then you can search stuff on it.',
+        url: 'https://spotifinfo.neutrixs.my.id',
+        imgPath: findpokemon,
     },
 ]

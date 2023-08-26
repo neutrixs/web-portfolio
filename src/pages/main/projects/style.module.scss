@@ -2,7 +2,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -18,5 +17,102 @@
     &.show {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+.projectsContainer {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.projects {
+    display: flex;
+    flex-direction: row;
+    gap: 3em;
+    justify-content: start;
+    align-items: center;
+
+    opacity: 0;
+    transform: translateY(50%);
+    transition-property: transform opacity;
+    transition-duration: 200ms;
+
+    &.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media screen and (max-width: 1080px) {
+        flex-direction: column;
+        gap: 6em;
+    }
+}
+
+.deck {
+    display: flex;
+    position: relative;
+    width: 30em;
+    height: 20em;
+
+    @media screen and (max-width: 1080px) {
+        width: 15em;
+        height: 10em;
+    }
+}
+
+.cardContainer {
+    display: flex;
+    position: absolute;
+    perspective: 50em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card {
+    background-color: white;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    box-shadow: 0.5em 0.5em 1em rgba(0, 0, 0, 0.5);
+
+    .img {
+        border-radius: 0.5em;
+        overflow: hidden;
+        img {
+            width: 25em;
+
+            @media screen and (max-width: 1080px) {
+                width: 15em;
+            }
+        }
+    }
+}
+
+.information {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    font-family: 'JetBrains Mono', monospace;
+    flex: 1;
+    max-width: 45em;
+    padding: 0 1.5em;
+
+    .infoTitle {
+        font-size: 3em;
+    }
+
+    .description {
+        font-size: 1.5em;
+    }
+
+    @media screen and (max-width: 1080px) {
+        .infoTitle {
+            font-size: 2em;
+        }
+
+        .description {
+            font-size: 1em;
+        }
     }
 }
