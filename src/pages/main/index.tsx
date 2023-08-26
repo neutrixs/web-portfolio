@@ -10,6 +10,7 @@ export default function MainPage() {
     const [parentHeight, setParentHeight] = useState(0)
 
     const [currentSlide, setCurrentSlide] = useState(0)
+    const [currentSlideHasRunOnce, setCurrentSlideHasRunOnce] = useState(false)
     const slides: React.ReactNode[] = [
         <Introduction key="introduction" height={parentHeight} />,
         <Projects key="projects" inView={currentSlide == 1} height={parentHeight} />,
@@ -40,6 +41,18 @@ export default function MainPage() {
             document.removeEventListener('keydown', keydown)
         }
     }, [])
+
+    useEffect(() => {
+        const prevSlide = parseInt(localStorage.getItem('slide') || '')
+        if (slides[prevSlide] && prevSlide != currentSlide && !currentSlideHasRunOnce) {
+            setCurrentSlide(prevSlide)
+            setCurrentSlideHasRunOnce(true)
+            return
+        }
+        setCurrentSlideHasRunOnce(true)
+
+        localStorage.setItem('slide', currentSlide.toString())
+    }, [currentSlide])
 
     useEffect(() => {
         if (!parent) return
