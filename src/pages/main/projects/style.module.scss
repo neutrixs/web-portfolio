@@ -81,6 +81,8 @@
         overflow: hidden;
         img {
             width: 25em;
+            transition-property: width;
+            transition-duration: 50ms;
 
             @media screen and (max-width: 1080px) {
                 width: 15em;
