@@ -11,12 +11,12 @@ interface props {
 export default function Projects({ inView, height }: props) {
     const [titleShow, setTitleShow] = useState(' ')
     const [projects, setProjects] = useState(projectsImport)
-    const [projectsShow, setProjectsShow] = useState(' ')
+    const [projectsHide, setProjectsHide] = useState(' ' + style.hide)
     const [current, setCurrent] = useState(0)
 
     useEffect(() => {
         setTimeout(() => setTitleShow(' ' + (inView ? style.show : '')), 500)
-        setTimeout(() => setProjectsShow(' ' + (inView ? style.show : '')), 1000)
+        setTimeout(() => setProjectsHide(' ' + (inView ? ' ' : style.hide)), 1000)
     }, [inView])
 
     function renderCards(): React.ReactNode[] {
@@ -40,7 +40,7 @@ export default function Projects({ inView, height }: props) {
         <div className={style.container} style={{ height: height.toString() + 'px' }}>
             <p className={style.title + titleShow}>My Projects</p>
             <div className={style.projectsContainer}>
-                <div className={style.projects + projectsShow}>
+                <div className={style.projects + projectsHide}>
                     <div className={style.deck}>{renderCards()}</div>
                     <div className={style.information}>
                         <span className={style.infoTitle}>{projects[current].name}</span>

@@ -33,14 +33,12 @@
     justify-content: start;
     align-items: center;
 
-    opacity: 0;
-    transform: translateY(50%);
-    transition-property: transform opacity;
+    transition-property: transform, opacity;
     transition-duration: 200ms;
 
-    &.show {
-        opacity: 1;
-        transform: translateY(0);
+    &.hide {
+        opacity: 0;
+        transform: translateY(50%);
     }
 
     @media screen and (max-width: 1080px) {
