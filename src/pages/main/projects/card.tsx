@@ -19,10 +19,14 @@ function getRandomRotation() {
 export default function Card({ image, url, zindex, index, currentIndex }: props) {
     const [randomRotation, setRandomRotation] = useState(getRandomRotation())
     const [rotateX, setRotateX] = useState(DEF_ROTATE_X)
+    const [rotateY, setRotateY] = useState('0')
+    const lastMousePolling = useRef(+new Date())
     const [scale, setScale] = useState(1)
     const [open, setOpen] = useState(false)
     const [popState, setPopState] = useState(false)
     const pop = popState || open
+    const popRef = useRef(pop)
+    popRef.current = pop
 
     const [cardELement, setCardElement] = useState<HTMLDivElement | null>(null)
     const [buttonElement, setButtonElement] = useState<HTMLDivElement | null>(null)
@@ -57,14 +61,35 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
             setOpen(true)
         }
 
+        function mousemove(mouse: MouseEvent) {
+            const dtime = +new Date() - lastMousePolling.current
+            if (!cardELement || dtime < 100 || !popRef.current) return
+            lastMousePolling.current = +new Date()
+
+            const w = cardELement.clientWidth
+            const h = cardELement.clientHeight
+
+            const rect = cardELement.getBoundingClientRect()
+            const ox = mouse.clientX - rect.left
+            const oy = mouse.clientY - rect.top
+
+            const dw = ox - w / 2
+            const dh = oy - h / 2
+
+            setRotateX(((-dh * 2) / h) * 10 + 'deg')
+            setRotateY(((dw * 2) / w) * 10 + 'deg')
+        }
+
         cardELement.addEventListener('click', enter)
         buttonElement.addEventListener('click', open)
         document.body.addEventListener('click', leave)
+        cardELement.addEventListener('mousemove', mousemove)
 
         return () => {
             cardELement.removeEventListener('click', enter)
             buttonElement.removeEventListener('click', open)
             document.body.removeEventListener('click', leave)
+            cardELement.removeEventListener('mousemove', mousemove)
         }
     }, [cardELement])
 
@@ -72,6 +97,7 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
         if (pop && index != currentIndex) return setPopState(false)
 
         setRotateX(pop ? '0' : DEF_ROTATE_X)
+        setRotateY(pop ? rotateY : '0')
         setRandomRotation(pop ? 0 : getRandomRotation())
         setScale(pop ? 1.5 : 1)
     }, [pop])
@@ -115,7 +141,7 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
             <div
                 className={style.card}
                 style={{
-                    transform: `rotateX(${rotateX}) rotate(${randomRotation}deg) scale(${scale})`,
+                    transform: `rotateX(${rotateX}) rotateY(${rotateY}) rotate(${randomRotation}deg) scale(${scale})`,
                 }}
                 ref={setCardElement}
                 onMouseEnter={() => mouseEvent(true)}
