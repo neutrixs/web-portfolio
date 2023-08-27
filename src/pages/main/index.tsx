@@ -25,9 +25,11 @@ export default function MainPage() {
         function keydown(event: KeyboardEvent) {
             switch (event.code) {
                 case 'ArrowUp':
+                case 'PageUp':
                     scroll(-1)
                     break
                 case 'ArrowDown':
+                case 'PageDown':
                     scroll(1)
                     break
             }
