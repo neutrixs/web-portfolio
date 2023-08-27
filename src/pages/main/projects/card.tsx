@@ -89,6 +89,9 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
     const fixedStyleData: React.CSSProperties = {
         position: 'fixed',
         left: rect.left,
+        //TODO: implement detection of the current slide number,
+        // currently, it's just assuming it's the second page
+        // which may cause problem later on
         top: rect.top + parentHeight,
         transform: 'translate(0,0)',
     }
