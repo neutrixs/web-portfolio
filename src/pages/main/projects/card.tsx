@@ -20,8 +20,9 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
     const [randomRotation, setRandomRotation] = useState(getRandomRotation())
     const [rotateX, setRotateX] = useState(DEF_ROTATE_X)
     const [scale, setScale] = useState(1)
-    const [pop, setPop] = useState(false)
     const [open, setOpen] = useState(false)
+    const [popState, setPopState] = useState(false)
+    const pop = popState || open
 
     const [cardELement, setCardElement] = useState<HTMLDivElement | null>(null)
     const [buttonElement, setButtonElement] = useState<HTMLDivElement | null>(null)
@@ -39,7 +40,7 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
 
         function enter() {
             locked.current = true
-            setPop(true)
+            setPopState(true)
         }
 
         function leave() {
@@ -47,7 +48,7 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
                 locked.current = false
                 return
             }
-            setPop(false)
+            setPopState(false)
             setOpen(false)
         }
 
@@ -68,7 +69,7 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
     }, [cardELement])
 
     useEffect(() => {
-        if (pop && index != currentIndex) return setPop(false)
+        if (pop && index != currentIndex) return setPopState(false)
 
         setRotateX(pop ? '0' : DEF_ROTATE_X)
         setRandomRotation(pop ? 0 : getRandomRotation())
@@ -78,27 +79,35 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
     useEffect(() => {
         if (!containerElement) return
 
-        if (open) {
-            setRect(containerElement.getBoundingClientRect())
-            setFixed(true)
+        if (pop) {
+            setTimeout(() => {
+                setRect(containerElement.getBoundingClientRect())
+                setFixed(true)
+            }, 200)
         } else {
             setFixed(false)
         }
-    }, [open, containerElement])
+    }, [pop, containerElement])
+
+    useEffect(() => {
+        console.log(open)
+    }, [open])
 
     const fixedStyleData: React.CSSProperties = {
         position: 'fixed',
-        left: rect.left,
+        left: open ? '50%' : rect.left,
         //TODO: implement detection of the current slide number,
         // currently, it's just assuming it's the second page
         // which may cause problem later on
-        top: rect.top + parentHeight,
-        transform: 'translate(0,0)',
+        top: open ? `calc(${parentHeight}px + 50vh)` : rect.top + parentHeight,
+        transform: open ? 'translate(-50%, -50%)' : 'translate(0,0)',
+        transitionProperty: 'top, left, transform',
+        transitionDuration: open ? '200ms' : '0',
     }
 
     function mouseEvent(popVal: boolean) {
         if (index != currentIndex) return
-        setPop(popVal)
+        setPopState(popVal)
     }
 
     return (
