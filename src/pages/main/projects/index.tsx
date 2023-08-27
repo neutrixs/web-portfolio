@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Card from './card'
-import { projects } from './data'
+import { projects as projectsImport } from './data'
 import style from './style.module.scss'
 
 interface props {
@@ -10,6 +10,7 @@ interface props {
 
 export default function Projects({ inView, height }: props) {
     const [titleShow, setTitleShow] = useState(' ')
+    const [projects, setProjects] = useState(projectsImport)
     const [projectsShow, setProjectsShow] = useState(' ')
     const [current, setCurrent] = useState(0)
 
@@ -26,6 +27,8 @@ export default function Projects({ inView, height }: props) {
                     image={project.imgPath}
                     url={project.url}
                     zindex={projects.length - i}
+                    index={i}
+                    currentIndex={current}
                 />
             )
         })

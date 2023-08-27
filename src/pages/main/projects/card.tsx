@@ -5,9 +5,11 @@ interface props {
     image: string
     url: string
     zindex: number
+    index: number
+    currentIndex: number
 }
 
-export default function Card({ image, url, zindex }: props) {
+export default function Card({ image, url, zindex, index, currentIndex }: props) {
     const [randomRotation] = useState(Math.random() * 30 - 15)
 
     return (
