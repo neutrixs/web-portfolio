@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Context } from '../store'
 import style from './style.module.scss'
 
 interface props {
@@ -20,12 +21,21 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
     const [rotateX, setRotateX] = useState(DEF_ROTATE_X)
     const [scale, setScale] = useState(1)
     const [pop, setPop] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const [cardELement, setCardElement] = useState<HTMLDivElement | null>(null)
+    const [buttonElement, setButtonElement] = useState<HTMLDivElement | null>(null)
+    const [containerElement, setContainerElement] = useState<HTMLDivElement | null>(null)
+
+    const [fixed, setFixed] = useState(false)
+    const [rect, setRect] = useState(new DOMRect())
+
+    const { parentHeight } = useContext(Context)
+
     const locked = useRef(false)
 
     useEffect(() => {
-        if (!cardELement) return
+        if (!cardELement || !buttonElement) return
 
         function enter() {
             locked.current = true
@@ -38,13 +48,21 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
                 return
             }
             setPop(false)
+            setOpen(false)
+        }
+
+        function open() {
+            locked.current = true
+            setOpen(true)
         }
 
         cardELement.addEventListener('click', enter)
+        buttonElement.addEventListener('click', open)
         document.body.addEventListener('click', leave)
 
         return () => {
             cardELement.removeEventListener('click', enter)
+            buttonElement.removeEventListener('click', open)
             document.body.removeEventListener('click', leave)
         }
     }, [cardELement])
@@ -57,13 +75,35 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
         setScale(pop ? 1.5 : 1)
     }, [pop])
 
+    useEffect(() => {
+        if (!containerElement) return
+
+        if (open) {
+            setRect(containerElement.getBoundingClientRect())
+            setFixed(true)
+        } else {
+            setFixed(false)
+        }
+    }, [open, containerElement])
+
+    const fixedStyleData: React.CSSProperties = {
+        position: 'fixed',
+        left: rect.left,
+        top: rect.top + parentHeight,
+        transform: 'translate(0,0)',
+    }
+
     function mouseEvent(popVal: boolean) {
         if (index != currentIndex) return
         setPop(popVal)
     }
 
     return (
-        <div className={style.cardContainer} style={{ zIndex: zindex }}>
+        <div
+            className={style.cardContainer}
+            style={{ zIndex: zindex, ...(fixed ? fixedStyleData : {}) }}
+            ref={setContainerElement}
+        >
             <div
                 className={style.card}
                 style={{
@@ -76,7 +116,9 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
                 <div className={style.roundedContainer}>
                     <img src={image} />
                     <div className={style.open} style={{ opacity: pop ? 1 : 0 }}>
-                        <div className={style.openButton}>Open</div>
+                        <div className={style.openButton} ref={setButtonElement}>
+                            Open
+                        </div>
                     </div>
                 </div>
             </div>

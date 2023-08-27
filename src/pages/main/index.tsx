@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Context } from './store'
 import Introduction from './introduction'
 import Projects from './projects'
 import styles from './style.module.scss'
@@ -92,14 +93,16 @@ export default function MainPage() {
     }
 
     return (
-        <div className={styles.fixedContainer} ref={setParent}>
-            <div
-                className={styles.slidesContainer}
-                style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
-            >
-                {slides}
+        <Context.Provider value={{ parentHeight }}>
+            <div className={styles.fixedContainer} ref={setParent}>
+                <div
+                    className={styles.slidesContainer}
+                    style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
+                >
+                    {slides}
+                </div>
+                {isTouchDevice ? scrollAccessibility() : null}
             </div>
-            {isTouchDevice ? scrollAccessibility() : null}
-        </div>
+        </Context.Provider>
     )
 }
