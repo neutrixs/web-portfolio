@@ -89,10 +89,6 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
         }
     }, [pop, containerElement])
 
-    useEffect(() => {
-        console.log(open)
-    }, [open])
-
     const fixedStyleData: React.CSSProperties = {
         position: 'fixed',
         left: open ? '50%' : rect.left,
