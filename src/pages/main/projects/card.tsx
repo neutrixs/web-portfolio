@@ -73,8 +73,11 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
                 onMouseEnter={() => mouseEvent(true)}
                 onMouseLeave={() => mouseEvent(false)}
             >
-                <div className={style.img}>
+                <div className={style.roundedContainer}>
                     <img src={image} />
+                    <div className={style.open} style={{ opacity: pop ? 1 : 0 }}>
+                        <div className={style.openButton}>Open</div>
+                    </div>
                 </div>
             </div>
         </div>
