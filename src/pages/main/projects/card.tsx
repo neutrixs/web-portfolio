@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import range from '../../../scripts/range'
 import { Context } from '../store'
 import style from './style.module.scss'
 
@@ -66,24 +67,28 @@ export default function Card({ image, url, zindex, index, currentIndex }: props)
             if (!cardELement || dtime < 100 || !popRef.current) return
             lastMousePolling.current = +new Date()
 
-            const w = cardELement.clientWidth
-            const h = cardELement.clientHeight
-
             const rect = cardELement.getBoundingClientRect()
-            const ox = mouse.clientX - rect.left
-            const oy = mouse.clientY - rect.top
+            const w = rect.width
+            const h = rect.height
+            const halfw = w / 2
+            const halfh = h / 2
+            const cenx = rect.left + halfw
+            const ceny = rect.top + halfh
 
-            const dw = ox - w / 2
-            const dh = oy - h / 2
+            const posx = mouse.clientX
+            const posy = mouse.clientY
 
-            setRotateX(((-dh * 2) / h) * 10 + 'deg')
-            setRotateY(((dw * 2) / w) * 10 + 'deg')
+            const delx = range(posx - cenx, -halfw, halfw)
+            const dely = range(posy - ceny, -halfh, halfh)
+
+            setRotateX(((-dely * 2) / h) * 10 + 'deg')
+            setRotateY(((delx * 2) / w) * 10 + 'deg')
         }
 
         cardELement.addEventListener('click', enter)
         buttonElement.addEventListener('click', open)
         document.body.addEventListener('click', leave)
-        cardELement.addEventListener('mousemove', mousemove)
+        document.body.addEventListener('mousemove', mousemove)
 
         return () => {
             cardELement.removeEventListener('click', enter)
