@@ -8,6 +8,7 @@ async function run() {
     const { default: Main } = await mainIm
 
     const rootElement = document.createElement('div')
+    rootElement.classList.add('app')
     const root = createRoot(rootElement)
     root.render(<Main />)
 

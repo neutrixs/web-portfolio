@@ -71,3 +71,11 @@ body {
     left: 1.5em;
     animation-delay: 0.5s;
 }
+
+.app {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}

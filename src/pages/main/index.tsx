@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Introduction from './introduction'
-import Projects from './projects'
 import styles from './style.module.scss'
 import arrow from '../../icons/arrow.svg'
 
@@ -11,8 +10,7 @@ export default function MainPage() {
 
     const [currentSlide, setCurrentSlide] = useState(0)
     const slides: React.ReactNode[] = [
-        <Introduction key="introduction" height={parentHeight} />,
-        <Projects key="projects" inView={currentSlide == 1} height={parentHeight} />,
+        <Introduction key="introduction" inView={currentSlide == 0} height={parentHeight} />,
     ]
 
     useEffect(() => {
