@@ -1,0 +1,115 @@
+.container {
+    background-color: var(--orange);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 0 3em;
+    gap: 2em;
+}
+
+@mixin title {
+    font-size: 2.5em;
+    font-family: 'Bungee', sans-serif;
+    color: var(--green);
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    line-height: 1em;
+}
+
+@mixin description {
+    font-size: 1em;
+    line-height: 1.5em;
+    font-family: 'Rubik', sans-serif;
+    color: var(--green);
+}
+
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: 25em;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: transform 200ms cubic-bezier(0.34, 0.38, 0.47, 1.23), opacity 200ms linear;
+
+    & > .title {
+        @include title();
+    }
+
+    & > .description {
+        @include description();
+    }
+}
+
+.languages {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 25em;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateX(50%);
+    transition: transform 200ms cubic-bezier(0.34, 0.38, 0.47, 1.23), opacity 200ms linear;
+
+    & > .title {
+        @include title();
+    }
+
+    & > .description {
+        @include description();
+    }
+}
+
+.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.dotsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.dot {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    border-radius: 0.5em;
+    background-color: var(--green);
+    color: var(--green);
+    animation: b 0.5s infinite linear alternate;
+    animation-delay: 0.25s;
+
+    &::before,
+    &::after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        width: 1em;
+        height: 1em;
+        border-radius: 0.5em;
+        background-color: var(--green);
+        color: var(--green);
+    }
+    &::before {
+        left: -1.5em;
+    }
+    &::after {
+        left: 1.5em;
+    }
+}
+
+@media (max-width: 50rem) {
+    .container {
+        grid-template-columns: auto;
+        grid-template-rows: minmax(0, 1fr) 0 0 minmax(0, 1fr);
+    }
+
+    .dotsContainer {
+        display: none;
+    }
+}

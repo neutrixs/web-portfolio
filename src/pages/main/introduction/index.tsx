@@ -22,7 +22,7 @@ export default function Introduction({ height, inView }: props) {
         <div style={{ height: `${height}px` }} className={style.container}>
             <div className={style.contentContainer}>
                 <span className={style.title + ' ' + (titleActive ? style.show : '')}>
-                    A frontend developer.
+                    A frontend web developer.
                 </span>
                 <span className={style.description + ' ' + (descriptionActive ? style.show : '')}>
                     And sometimes, a backend developer too.

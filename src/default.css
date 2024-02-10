@@ -1,3 +1,8 @@
+:root {
+    --green: hsl(150, 100%, 60%);
+    --orange: hsl(10, 100%, 60%);
+}
+
 body {
     background-color: hsl(220, 14%, 15%);
     color: white;

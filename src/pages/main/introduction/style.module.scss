@@ -1,12 +1,7 @@
-:root {
-    --introduction-green: hsl(150, 100%, 60%);
-    --introduction-orange: hsl(10, 100%, 60%);
-}
-
 .container {
     width: 100vw;
-    background-color: var(--introduction-green);
-    color: var(--introduction-orange);
+    background-color: var(--green);
+    color: var(--orange);
 
     display: grid;
     grid-template-columns: 70% 2em auto;
@@ -16,7 +11,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: var(--introduction-orange);
+    background-color: var(--orange);
 
     --mask: conic-gradient(from 0deg at left, #0000, #000 1deg 89deg, #0000 90deg) 50%/100% 4em;
     -webkit-mask: var(--mask);
@@ -67,7 +62,7 @@
 }
 
 .right {
-    background-color: var(--introduction-orange);
+    background-color: var(--orange);
 }
 
 .contentContainer {
