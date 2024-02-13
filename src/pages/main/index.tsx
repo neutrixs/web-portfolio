@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Introduction from './introduction'
 import About from './about'
-import styles from './style.module.scss'
-import arrow from '../../icons/arrow.svg'
+import styles from './index.module.scss'
+import arrow from '../../img/arrow.svg'
 
 export default function MainPage() {
     const isTouchDevice = 'ontouchstart' in document.documentElement

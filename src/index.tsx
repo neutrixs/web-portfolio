@@ -1,15 +1,22 @@
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import MainPage from './pages/main'
+
+function Main() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+            </Routes>
+        </BrowserRouter>
+    )
+}
+
 async function run() {
-    const reactIm = import('react')
-    const reactDomClientIm = import('react-dom/client')
-    const mainIm = import('./main')
-
-    const { default: React } = await reactIm
-    const { createRoot } = await reactDomClientIm
-    const { default: Main } = await mainIm
-
     const rootElement = document.createElement('div')
-    rootElement.classList.add('app')
     const root = createRoot(rootElement)
+    rootElement.classList.add('app')
     root.render(<Main />)
 
     const loading = document.getElementById('loading')

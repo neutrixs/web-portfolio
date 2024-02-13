@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import myself from '../../../img/myself.jpg'
-import style from './style.module.scss'
+import myself from '../../img/myself.jpg'
+import style from './introduction.module.scss'
 
 interface props {
     height: number

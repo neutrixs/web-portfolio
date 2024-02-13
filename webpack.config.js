@@ -9,7 +9,14 @@ const path = require('path')
  */
 const config = (dev, name) => ({
     mode: dev ? 'development' : 'production',
-    entry: ['./src/index.tsx', './src/default.css'],
+    entry: {
+        vendors: ['react', 'react-dom/client', 'react-router-dom'],
+        main: {
+            import: './src/index.tsx',
+            dependOn: 'vendors',
+        },
+        css: './src/default.css',
+    },
     output: {
         filename: `static/${name}.js`,
         path: path.resolve(__dirname, 'public'),
