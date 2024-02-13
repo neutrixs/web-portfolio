@@ -4,16 +4,18 @@ import About from './about'
 import styles from './index.module.scss'
 import arrow from '../../img/arrow.svg'
 
+export interface slidesProps {
+    height: number
+    inView: boolean
+}
+
 export default function MainPage() {
     const isTouchDevice = 'ontouchstart' in document.documentElement
     const [parent, setParent] = useState<HTMLDivElement | null>(null)
     const [parentHeight, setParentHeight] = useState(0)
 
     const [currentSlide, setCurrentSlide] = useState(0)
-    const slides: React.ReactNode[] = [
-        <Introduction key="introduction" inView={currentSlide == 0} height={parentHeight} />,
-        <About key="about" inView={currentSlide == 1} height={parentHeight} />,
-    ]
+    const slides: ((props: slidesProps) => React.ReactNode)[] = [Introduction, About]
 
     useEffect(() => {
         function wheel(event: WheelEvent) {
@@ -82,7 +84,9 @@ export default function MainPage() {
                 className={styles.slidesContainer}
                 style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
             >
-                {slides}
+                {slides.map((Val, i) => (
+                    <Val height={parentHeight} key={`slides${i}`} inView={currentSlide == i} />
+                ))}
             </div>
             {isTouchDevice ? scrollAccessibility() : null}
         </div>

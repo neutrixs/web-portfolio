@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { slidesProps } from '.'
 import myself from '../../img/myself.jpg'
 import style from './introduction.module.scss'
 
-interface props {
-    height: number
-    inView: boolean
-}
-
-export default function Introduction({ height, inView }: props) {
+export default function Introduction({ height, inView }: slidesProps) {
     const [titleActive, setTitleActive] = useState(false)
     const [descriptionActive, setDescriptionActive] = useState(false)
     const [picActive, setPicActive] = useState(false)

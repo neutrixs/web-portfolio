@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { slidesProps } from '.'
 import style from './about.module.scss'
 
-interface props {
-    height: number
-    inView: boolean
-}
-
-export default function About({ height, inView }: props) {
+export default function About({ height, inView }: slidesProps) {
     const [aboutShow, setAboutShow] = useState(false)
     const [languagesShow, setLanguagesShow] = useState(false)
 
