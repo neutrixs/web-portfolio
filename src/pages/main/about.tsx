@@ -33,10 +33,9 @@ export default function About({ height, inView }: props) {
             <div className={style.about + ' ' + (aboutShow ? style.show : '')}>
                 <span className={style.title}>About me</span>
                 <span className={style.description}>
-                    My name is Ihsan Maulana Rakhman. I started coding when I was about 13 years
-                    old. I learned coding by my own with the help of online guides and tutorials. I
-                    sometimes wonder whether if web developers can be replaced with A.I, but my
-                    answer is probably no.
+                    My name is Ihsan Maulana Rakhman. However, you may call me by my second name,
+                    Steven. I started coding when I was about 13 years old. I learned to code by my
+                    own with the help of online guides. I also love photography.
                 </span>
             </div>
             {gen2Dots()}
@@ -44,7 +43,7 @@ export default function About({ height, inView }: props) {
                 <span className={style.title}>Languages</span>
                 <span className={style.description}>
                     The languages I speak are Javascript, Typescript, and Go. But, I'm currently
-                    learning C. I also want to learn C# for stuff like game development and modding.
+                    learning C and C++.
                 </span>
             </div>
         </div>
