@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
 import musicIcon from '../../img/music.svg'
+import { ScrollableContext } from '../../context'
 
 interface props {
     height: number
@@ -19,6 +20,8 @@ export default function Showcase({ height, inView }: props) {
     const [musicShow, setMusicShow] = useState(false)
     const [subpanelShow, setSubpanelShow] = useState(false)
 
+    const { setScrollable } = useContext(ScrollableContext)
+
     useEffect(() => {
         if (inView) {
             setTimeout(() => setTitleShow(true), 300)
@@ -30,6 +33,10 @@ export default function Showcase({ height, inView }: props) {
             setMusicShow(false)
         }
     }, [inView])
+
+    useEffect(() => {
+        if (setScrollable) setScrollable(!subpanelShow)
+    }, [subpanelShow])
 
     function openSubpanel(id: subpanelMenus) {
         setSubpanelShow(true)
