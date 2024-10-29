@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import Music from './music'
+
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
 import musicIcon from '../../img/music.svg'
@@ -21,6 +23,7 @@ export default function Showcase({ height, inView }: props) {
     const [musicShow, setMusicShow] = useState(false)
     const [subpanelShow, setSubpanelShow] = useState(false)
     const [subpanelTitle, setSubpanelTitle] = useState('')
+    const [subpanelContent, setSubpanelContent] = useState<ReactNode>(null)
 
     const { setScrollable } = useContext(ScrollableContext)
 
@@ -45,9 +48,11 @@ export default function Showcase({ height, inView }: props) {
         switch (id) {
             case subpanelMenus.gallery:
                 setSubpanelTitle('Photo Gallery')
+                setSubpanelContent(null)
                 break
             case subpanelMenus.music:
                 setSubpanelTitle('Favorite Song')
+                setSubpanelContent(<Music />)
                 break
         }
     }
@@ -82,6 +87,7 @@ export default function Showcase({ height, inView }: props) {
                     <img src={backIcon} onClick={() => setSubpanelShow(false)} />
                     <span>{subpanelTitle}</span>
                 </div>
+                {subpanelContent}
             </div>
         </div>
     )
