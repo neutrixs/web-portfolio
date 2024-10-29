@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
 import musicIcon from '../../img/music.svg'
+import backIcon from '../../img/back.svg'
 import { ScrollableContext } from '../../context'
 
 interface props {
@@ -19,6 +20,7 @@ export default function Showcase({ height, inView }: props) {
     const [galleryShow, setGalleryShow] = useState(false)
     const [musicShow, setMusicShow] = useState(false)
     const [subpanelShow, setSubpanelShow] = useState(false)
+    const [subpanelTitle, setSubpanelTitle] = useState('')
 
     const { setScrollable } = useContext(ScrollableContext)
 
@@ -40,6 +42,14 @@ export default function Showcase({ height, inView }: props) {
 
     function openSubpanel(id: subpanelMenus) {
         setSubpanelShow(true)
+        switch (id) {
+            case subpanelMenus.gallery:
+                setSubpanelTitle('Photo Gallery')
+                break
+            case subpanelMenus.music:
+                setSubpanelTitle('Favorite Song')
+                break
+        }
     }
 
     return (
@@ -67,7 +77,12 @@ export default function Showcase({ height, inView }: props) {
                     </div>
                 </div>
             </div>
-            <div className={style.subPanel + ' ' + (subpanelShow ? style.show : '')}></div>
+            <div className={style.subPanel + ' ' + (subpanelShow ? style.show : '')}>
+                <div className={style.navigation}>
+                    <img src={backIcon} onClick={() => setSubpanelShow(false)} />
+                    <span>{subpanelTitle}</span>
+                </div>
+            </div>
         </div>
     )
 }

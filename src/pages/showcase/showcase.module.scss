@@ -116,3 +116,22 @@
         transform: translate(0, 0);
     }
 }
+
+.navigation {
+    display: grid;
+    grid-template-columns: 2em auto 2em;
+    height: 2em;
+    align-items: center;
+    padding: 1em;
+
+    & > img {
+        width: 2em;
+        cursor: pointer;
+    }
+
+    & > span {
+        font-family: 'Bungee', sans-serif;
+        font-size: 1.5em;
+        text-align: center;
+    }
+}
