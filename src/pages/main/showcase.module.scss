@@ -33,9 +33,14 @@
         width: 20em;
         border-radius: 1em;
         padding: 0.5em;
+        transition-property: transform box-shadow;
+        transition-duration: 15ms;
+        transition-timing-function: ease-out;
 
         cursor: pointer;
         box-shadow: 0.5em 0.5em #00000030;
+
+        -webkit-tap-highlight-color: transparent;
 
         & > img {
             width: 5em;
@@ -45,6 +50,11 @@
         & > span {
             font-size: 2em;
             font-family: 'Bungee', sans-serif;
+        }
+
+        &:active {
+            transform: translate(0.5em, 0.5em);
+            box-shadow: 0 0;
         }
     }
 }
