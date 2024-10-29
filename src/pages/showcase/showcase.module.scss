@@ -137,3 +137,15 @@
         text-align: center;
     }
 }
+
+@media screen and (min-width: 40em) {
+    .subPanel {
+        font-size: 1.25em;
+    }
+}
+
+@media screen and (min-width: 70em) {
+    .subPanel {
+        font-size: 1.5em;
+    }
+}
