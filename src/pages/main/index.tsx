@@ -86,7 +86,7 @@ export default function MainPage() {
     }
 
     return (
-        <div className={styles.fixedContainer} ref={setParent}>
+        <div className={styles.fixedContainer + ' noselect'} ref={setParent}>
             <div
                 className={styles.slidesContainer}
                 style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
