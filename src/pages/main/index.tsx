@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Introduction from './introduction'
 import About from './about'
-import Showcase from './showcase'
+import Showcase from '../showcase/showcase'
 import styles from './index.module.scss'
 import arrow from '../../img/arrow.svg'
 

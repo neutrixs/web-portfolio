@@ -1,0 +1,118 @@
+@mixin hide {
+    opacity: 0;
+    transition: transform 200ms cubic-bezier(0.34, 0.38, 0.47, 1.23), opacity 200ms linear;
+    transform: translate(-50%, 0);
+}
+
+@mixin show {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.container {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.showcasePanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 100%;
+
+    background-color: var(--green);
+    color: var(--orange);
+}
+
+.title {
+    font-size: 2.5em;
+    font-family: 'Bungee', sans-serif;
+    line-height: 1em;
+    text-align: center;
+
+    @include hide();
+
+    &.show {
+        @include show();
+    }
+}
+
+.showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3em;
+
+    & > div {
+        @include hide();
+        &:nth-child(even) {
+            transform: translate(50%, 0);
+        }
+
+        &.show {
+            @include show();
+        }
+    }
+}
+
+.showcaseElement {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+    background-color: var(--orange);
+    color: var(--green);
+    height: 5em;
+    width: 20em;
+    border-radius: 1em;
+    padding: 0.5em;
+    transition: transform 15ms ease-out, box-shadow 15ms ease-out;
+    cursor: pointer;
+    box-shadow: 0.5em 0.5em #00000030;
+
+    -webkit-tap-highlight-color: transparent;
+
+    &:nth-child(even) {
+        transform: translate(50%, 0);
+    }
+
+    & > img {
+        width: 5em;
+        height: 5em;
+    }
+
+    & > span {
+        font-size: 2em;
+        font-family: 'Bungee', sans-serif;
+    }
+
+    &:active {
+        transform: translate(0.5em, 0.5em);
+        box-shadow: 0 0;
+    }
+}
+
+.subPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    transform: translate(100vw, 0);
+
+    background-color: var(--orange);
+    color: var(--green);
+    transition: transform 100ms ease-out;
+
+    &.show {
+        transform: translate(0, 0);
+    }
+}
