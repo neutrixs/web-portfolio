@@ -84,12 +84,21 @@ export default function MainPage() {
     function scrollAccessibility() {
         return (
             <div className={styles.scrollAccessibility}>
-                <div onClick={() => scroll(-1)}>
-                    <img src={arrow} />
-                </div>
-                <div onClick={() => scroll(1)}>
-                    <img src={arrow} />
-                </div>
+                {currentSlide != 0 ? (
+                    <div onClick={() => scroll(-1)} className={styles.arrow}>
+                        <img src={arrow} />
+                    </div>
+                ) : (
+                    <div />
+                )}
+
+                {currentSlide < slides.length - 1 ? (
+                    <div onClick={() => scroll(1)} className={styles.arrow}>
+                        <img src={arrow} />
+                    </div>
+                ) : (
+                    <div />
+                )}
             </div>
         )
     }
