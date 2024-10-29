@@ -16,6 +16,13 @@ export default function MainPage() {
     ]
 
     useEffect(() => {
+        const override = parseFloat(localStorage.getItem('_PAGE_NUMBER_OVERRIDE_') ?? '')
+        if (!isNaN(override)) {
+            setCurrentSlide(override)
+        }
+    }, [])
+
+    useEffect(() => {
         function wheel(event: WheelEvent) {
             if (!event.deltaY) return
             scroll(event.deltaY / Math.abs(event.deltaY))
