@@ -36,7 +36,11 @@ function Line({ lineData, active, currentTime }: lineProps) {
             )
         })
     } else {
-        words.push(<span className={active ? style.wordActive : ''}>...</span>)
+        words.push(
+            <span key={'s' + lineData.time} className={active ? style.wordActive : ''}>
+                ...
+            </span>,
+        )
     }
 
     return <p>{words}</p>
@@ -48,6 +52,8 @@ export default function Music({ audio }: props) {
 
     useEffect(() => {
         ;(window as any).audio = audio
+        audio.current.currentTime = 100
+        audio.current.play()
 
         const interval = setInterval(() => {
             setCurrentTime(audio.current.currentTime)
