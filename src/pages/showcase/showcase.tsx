@@ -1,4 +1,5 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
+import coloratura from '../../audio/coloratura.mp3'
 import Music from './music'
 
 import style from './showcase.module.scss'
@@ -24,6 +25,7 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelShow, setSubpanelShow] = useState(false)
     const [subpanelTitle, setSubpanelTitle] = useState('')
     const [subpanelContent, setSubpanelContent] = useState<ReactNode>(null)
+    const audio = useRef(new Audio(coloratura))
 
     const { setScrollable } = useContext(ScrollableContext)
 
@@ -52,7 +54,7 @@ export default function Showcase({ height, inView }: props) {
                 break
             case subpanelMenus.music:
                 setSubpanelTitle('Favorite Song')
-                setSubpanelContent(<Music />)
+                setSubpanelContent(<Music {...{ audio }} />)
                 break
         }
     }
