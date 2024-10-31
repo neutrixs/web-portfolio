@@ -55,10 +55,18 @@
 
     & span {
         opacity: 0.5;
+        transition: transform 0.2s ease-out, scale 0.2s ease-out;
+        transform: translate(0);
+        display: inline-block;
     }
 
     .wordActive {
         opacity: 1;
+        transform: translate(-0.1em, -0.1em);
+    }
+
+    .whitespace {
+        display: inline;
     }
 
     &::-webkit-scrollbar {

@@ -1,4 +1,14 @@
-import React, { ReactNode, memo, createContext, useContext, useEffect, useState } from 'react'
+import React, {
+    ReactNode,
+    memo,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    useMemo,
+    useId,
+    useCallback,
+} from 'react'
 import transcriptData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
@@ -7,90 +17,96 @@ interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
 }
 
-interface wordProps {
-    text: string
-    lineIndex: number
-    myIndex: number
+interface LineProps {
+    line: LineData | PauseData
+    active: boolean
+    activeWord: number
+    audio: HTMLAudioElement
 }
 
-interface lineProps {
-    lineData: LineData | PauseData
-    myIndex: number
-    audio: React.MutableRefObject<HTMLAudioElement>
-}
-
-interface activeLyrics {
-    line: number
-    word: number
-}
-
-const ActiveLyricsContext = createContext<activeLyrics>({ line: 0, word: 0 })
-
-function Word({ text, myIndex, lineIndex }: wordProps) {
-    const { line, word } = useContext(ActiveLyricsContext)
-
-    return (
-        <span className={line == lineIndex && word >= myIndex ? style.wordActive : ''}>{text}</span>
-    )
-}
-
-const Line = memo(function Line({ lineData, myIndex, audio }: lineProps) {
+const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) {
     const words: ReactNode[] = []
-    if (lineData.type == 'line') {
-        lineData.words.forEach((word, i) => {
+    const onclick = useCallback(() => {
+        audio.pause()
+        audio.currentTime = line.time
+        audio.play()
+    }, [])
+
+    if (line.type == 'pause') {
+        words.push(
+            <span key={'p_0'} className={active ? style.wordActive : ''}>
+                ...
+            </span>,
+        )
+    } else {
+        line.words.forEach((word, i) => {
             words.push(
-                <Word key={'w' + word.time} text={word.word} myIndex={i} lineIndex={myIndex} />,
-                <span> </span>,
+                <span
+                    key={'w' + word.time}
+                    className={active && activeWord >= i ? style.wordActive : ''}
+                >
+                    {word.word + ' '}
+                </span>,
+                <span className={style.whitespace} key={'s' + word.time}>
+                    {' '}
+                </span>,
             )
         })
-    } else {
-        words.push(<Word key={'w' + lineData.time} text={'...'} myIndex={0} lineIndex={myIndex} />)
     }
-
-    return <p onClick={() => (audio.current.currentTime = lineData.time)}>{words}</p>
+    return <p onClick={onclick}>{words}</p>
 })
 
 export default function Music({ audio }: props) {
-    const [lines, setLines] = useState<ReactNode[]>([])
-    const [cline, setcline] = useState(0)
-    const [cword, setcword] = useState(0)
+    const [activeLine, setActiveLine] = useState(0)
+    const [activeWord, setActiveWord] = useState(0)
 
     useEffect(() => {
-        ;(window as any).audio = audio
-        audio.current.currentTime = 100
-        audio.current.play()
-
-        setLines(
-            transcriptData.map((line, i) => (
-                <Line key={'l' + line.time} lineData={line} myIndex={i} audio={audio} />
-            )),
-        )
-
         const interval = setInterval(() => {
-            const currentLineIndex =
+            const active =
                 transcriptData
                     .map((val, i) => ({ time: val.time, i }))
-                    .filter((val) => val.time < audio.current.currentTime)
+                    .filter((val) => val.time <= audio.current.currentTime)
                     .at(-1)?.i ?? 0
-            let currentWordIndex = 0
-            const currentLine = transcriptData[currentLineIndex]
 
-            if (currentLine.type == 'line') {
-                currentWordIndex =
-                    currentLine.words
+            const line = transcriptData[active]
+            let activeWordCurrent = -1
+            if (line.type == 'line') {
+                activeWordCurrent =
+                    line.words
                         .map((val, i) => ({ time: val.time, i }))
-                        .filter((val) => val.time < audio.current.currentTime)
+                        .filter((val) => val.time <= audio.current.currentTime)
                         .at(-1)?.i ?? 0
+                console.log(activeWordCurrent)
             }
 
-            setcline(currentLineIndex)
-            setcword(currentWordIndex)
-        }, 50)
+            setActiveLine(active)
+            setActiveWord(activeWordCurrent)
+        }, 100)
 
-        return () => {
-            clearInterval(interval)
-        }
+        return () => clearInterval(interval)
     }, [])
+
+    function genLines() {
+        const lines: ReactNode[] = []
+        for (let i = 0; i < transcriptData.length; i++) {
+            const line = transcriptData[i]
+            const active = activeLine == i
+
+            lines.push(
+                <Line
+                    key={'l' + line.time}
+                    {...{
+                        active,
+                        activeWord: active ? activeWord : -1,
+                        line,
+                        audio: audio.current,
+                    }}
+                />,
+            )
+        }
+
+        return lines
+    }
 
     return (
         <div className={style.container}>
@@ -101,9 +117,7 @@ export default function Music({ audio }: props) {
                     <span>Coldplay</span>
                 </div>
             </div>
-            <ActiveLyricsContext.Provider value={{ line: cline, word: cword }}>
-                <div className={style.lyrics}>{lines}</div>
-            </ActiveLyricsContext.Provider>
+            <div className={style.lyrics}>{genLines()}</div>
         </div>
     )
 }
