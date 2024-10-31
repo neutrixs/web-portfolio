@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import coloratura from '../../audio/coloratura.mp3'
+import coloratura from '../../audio/coloratura.ogg'
 import Music from './music'
 
 import style from './showcase.module.scss'

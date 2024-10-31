@@ -1,14 +1,4 @@
-import React, {
-    ReactNode,
-    memo,
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-    useMemo,
-    useId,
-    useCallback,
-} from 'react'
+import React, { ReactNode, memo, useEffect, useState, useCallback } from 'react'
 import transcriptData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
@@ -27,9 +17,7 @@ interface LineProps {
 const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) {
     const words: ReactNode[] = []
     const onclick = useCallback(() => {
-        audio.pause()
         audio.currentTime = line.time
-        audio.play()
     }, [])
 
     if (line.type == 'pause') {
@@ -65,7 +53,7 @@ export default function Music({ audio }: props) {
             const active =
                 transcriptData
                     .map((val, i) => ({ time: val.time, i }))
-                    .filter((val) => val.time <= audio.current.currentTime)
+                    .filter((val) => val.time <= audio.current.currentTime + 0.1)
                     .at(-1)?.i ?? 0
 
             const line = transcriptData[active]
@@ -74,7 +62,7 @@ export default function Music({ audio }: props) {
                 activeWordCurrent =
                     line.words
                         .map((val, i) => ({ time: val.time, i }))
-                        .filter((val) => val.time <= audio.current.currentTime)
+                        .filter((val) => val.time <= audio.current.currentTime + 0.1)
                         .at(-1)?.i ?? 0
                 console.log(activeWordCurrent)
             }

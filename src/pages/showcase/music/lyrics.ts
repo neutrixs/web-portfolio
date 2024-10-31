@@ -171,7 +171,7 @@ const transcriptData: (LineData | PauseData)[] = [
         type: 'line',
         time: 176.148541,
         words: [
-            { word: 'Oumamama,', time: 176.148541 },
+            { word: 'Oumuamua,', time: 176.148541 },
             { word: 'Heliopause,', time: 177.966666 },
             { word: 'and', time: 179.459478 },
             { word: 'Neptune', time: 179.902207 },
