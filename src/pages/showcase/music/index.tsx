@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, memo, createContext, useContext, useEffect, useState } from 'react'
 import transcriptData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
@@ -9,76 +9,88 @@ interface props {
 
 interface wordProps {
     text: string
-    active: boolean
+    lineIndex: number
+    myIndex: number
 }
 
 interface lineProps {
     lineData: LineData | PauseData
-    active: boolean
-    currentTime: number
+    myIndex: number
+    audio: React.MutableRefObject<HTMLAudioElement>
 }
 
-function Word({ text, active }: wordProps) {
-    return <span className={active ? style.wordActive : ''}>{text}</span>
+interface activeLyrics {
+    line: number
+    word: number
 }
 
-function Line({ lineData, active, currentTime }: lineProps) {
+const ActiveLyricsContext = createContext<activeLyrics>({ line: 0, word: 0 })
+
+function Word({ text, myIndex, lineIndex }: wordProps) {
+    const { line, word } = useContext(ActiveLyricsContext)
+
+    return (
+        <span className={line == lineIndex && word >= myIndex ? style.wordActive : ''}>{text}</span>
+    )
+}
+
+const Line = memo(function Line({ lineData, myIndex, audio }: lineProps) {
     const words: ReactNode[] = []
     if (lineData.type == 'line') {
-        lineData.words.forEach((word) => {
+        lineData.words.forEach((word, i) => {
             words.push(
-                <Word
-                    key={'w' + word.time}
-                    active={!active ? false : currentTime >= word.time ? true : false}
-                    text={word.word}
-                />,
+                <Word key={'w' + word.time} text={word.word} myIndex={i} lineIndex={myIndex} />,
                 <span> </span>,
             )
         })
     } else {
-        words.push(
-            <span key={'s' + lineData.time} className={active ? style.wordActive : ''}>
-                ...
-            </span>,
-        )
+        words.push(<Word key={'w' + lineData.time} text={'...'} myIndex={0} lineIndex={myIndex} />)
     }
 
-    return <p>{words}</p>
-}
+    return <p onClick={() => (audio.current.currentTime = lineData.time)}>{words}</p>
+})
 
 export default function Music({ audio }: props) {
-    const lines: ReactNode[] = []
-    const [currentTime, setCurrentTime] = useState(audio.current.currentTime)
+    const [lines, setLines] = useState<ReactNode[]>([])
+    const [cline, setcline] = useState(0)
+    const [cword, setcword] = useState(0)
 
     useEffect(() => {
         ;(window as any).audio = audio
         audio.current.currentTime = 100
         audio.current.play()
 
+        setLines(
+            transcriptData.map((line, i) => (
+                <Line key={'l' + line.time} lineData={line} myIndex={i} audio={audio} />
+            )),
+        )
+
         const interval = setInterval(() => {
-            setCurrentTime(audio.current.currentTime)
+            const currentLineIndex =
+                transcriptData
+                    .map((val, i) => ({ time: val.time, i }))
+                    .filter((val) => val.time < audio.current.currentTime)
+                    .at(-1)?.i ?? 0
+            let currentWordIndex = 0
+            const currentLine = transcriptData[currentLineIndex]
+
+            if (currentLine.type == 'line') {
+                currentWordIndex =
+                    currentLine.words
+                        .map((val, i) => ({ time: val.time, i }))
+                        .filter((val) => val.time < audio.current.currentTime)
+                        .at(-1)?.i ?? 0
+            }
+
+            setcline(currentLineIndex)
+            setcword(currentWordIndex)
         }, 50)
 
-        return () => clearInterval(interval)
+        return () => {
+            clearInterval(interval)
+        }
     }, [])
-
-    for (let i = 0; i < transcriptData.length; i++) {
-        const lineData = transcriptData[i]
-        const isAfterStart = audio.current.currentTime >= lineData.time
-        const isBeforeEnd = transcriptData[i + 1]
-            ? audio.current.currentTime < transcriptData[i + 1].time
-            : true
-        const active = isAfterStart && isBeforeEnd
-
-        lines.push(
-            <Line
-                key={'l' + lineData.time}
-                active={active}
-                lineData={lineData}
-                currentTime={currentTime}
-            />,
-        )
-    }
 
     return (
         <div className={style.container}>
@@ -89,7 +101,9 @@ export default function Music({ audio }: props) {
                     <span>Coldplay</span>
                 </div>
             </div>
-            <div className={style.lyrics}>{lines}</div>
+            <ActiveLyricsContext.Provider value={{ line: cline, word: cword }}>
+                <div className={style.lyrics}>{lines}</div>
+            </ActiveLyricsContext.Provider>
         </div>
     )
 }
