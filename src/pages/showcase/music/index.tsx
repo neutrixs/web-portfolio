@@ -1,9 +1,8 @@
 import React, { ReactNode, memo, useEffect, useState, useCallback, useRef } from 'react'
+import Controller from './controller'
 import transcriptData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
-import pauseButton from '../../../img/pause-cropped.svg'
-import playButton from '../../../img/play-cropped.svg'
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
@@ -64,37 +63,6 @@ const Line = memo(function Line({ line, active, activeWord, audio, containerRef 
         })
     }
     return <p ref={lineRef}>{words}</p>
-})
-
-const Controller = memo(function Controller({ audio }: props) {
-    const [isPlaying, setIsPlaying] = useState(!audio.current.paused)
-
-    useEffect(() => {
-        function onpause() {
-            setIsPlaying(false)
-        }
-
-        function onplay() {
-            setIsPlaying(true)
-        }
-
-        audio.current.addEventListener('pause', onpause)
-        audio.current.addEventListener('play', onplay)
-
-        return () => {
-            audio.current.removeEventListener('pause', onpause)
-            audio.current.removeEventListener('play', onplay)
-        }
-    }, [])
-
-    return (
-        <div className={style.controller}>
-            <img
-                src={isPlaying ? pauseButton : playButton}
-                onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
-            />
-        </div>
-    )
 })
 
 export default function Music({ audio }: props) {
