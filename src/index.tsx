@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from './pages/main'
@@ -17,7 +17,11 @@ async function run() {
     const rootElement = document.createElement('div')
     const root = createRoot(rootElement)
     rootElement.classList.add('app')
-    root.render(<Main />)
+    root.render(
+        <StrictMode>
+            <Main />
+        </StrictMode>,
+    )
 
     const loading = document.getElementById('loading')
     loading?.parentElement?.removeChild(loading)
