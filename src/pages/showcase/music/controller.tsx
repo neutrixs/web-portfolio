@@ -16,23 +16,28 @@ interface SeekbarProps {
 const Sine = memo(function Sine() {
     return (
         <svg
-            width="500"
+            width="1000"
             height="105"
-            style={{ width: `${SVG_WIDTH_EM}em` }}
-            viewBox="0 0 6.2832 1"
+            viewBox="4.7117 0 12.56 1"
             xmlns="http://www.w3.org/2000/svg"
+            style={{ width: `${SVG_WIDTH_EM * 2}em` }}
         >
             <path
-                d="M 7.853 1
-                C 7.2855 1, 6.7955 0.75615, 6.2832 0.5
-                C 5.7709 0.25615, 5.281 0, 4.7124 0
-                C 4.144 0, 3.654 0.25615, 3.1416 0.5
-                C 2.6293 0.75615, 2.1393 1, 1.5708 1
-                C 1.0023 1, 0.5123 0.75615, 0 0.5
-                C -0.5123 0.25615, -1.0022 0, -3.1416 0.5"
+                d=" M 18.2801 0
+    18.2801 0, 17.7901 0.25615, 17.2777 0.5
+   C 16.7654 0.25615, 16.2755 0, 15.707 0
+   C 15.1385 0, 14.6485 0.25615, 14.1361 0.5
+   C 13.6238 0.75615, 13.1338 1, 12.5653 1
+   C 11.9968 1, 11.5068 0.75615, 10.9944 0.5
+   C 10.4821 0.25615, 9.9922 0, 9.4236 0
+   C 8.8551 0, 8.3651 0.25615, 7.853 0.5
+   C 7.3409 0.75615, 6.8509 1, 6.2823 1
+   C 5.7138 1, 5.2238 0.75615, 4.7117 0.5
+   C 4.1994 0.75615, 3.7094 1, 3.1409 1"
                 fill="none"
                 stroke="#33ff99"
                 stroke-width="1.6"
+                stroke-linecap="round"
             />
         </svg>
     )
@@ -42,7 +47,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
     const activeSeekRef = useRef<HTMLDivElement>(null)
     const wavesRef = useRef<HTMLDivElement>(null)
     const [amount, setAmount] = useState(1)
-    const [translate, setTranslate] = useState(0)
+    const [translate, setTranslate] = useState(-SVG_WIDTH_EM)
     const [raise, setRaise] = useState(0)
     const isPlayingRef = useRef(isPlaying)
 
@@ -57,7 +62,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                 const width = activeSeekRef.current.clientWidth
                 const eachWidth = SVG_WIDTH_EM * fontSize
 
-                setAmount(Math.ceil(width / eachWidth) + 1)
+                setAmount(Math.ceil(width / eachWidth / 2) + 1)
             }
         }
 
@@ -74,7 +79,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                 setTranslate((prev) => {
                     const dec = 0.02
                     let newval = prev - dec
-                    if (newval < -SVG_WIDTH_EM) newval += SVG_WIDTH_EM
+                    if (newval < -2 * SVG_WIDTH_EM) newval += SVG_WIDTH_EM
 
                     if (activeSeekRef.current) {
                         const fontSize = parseFloat(
