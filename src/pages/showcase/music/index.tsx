@@ -1,7 +1,9 @@
-import React, { ReactNode, memo, useEffect, useState, useCallback } from 'react'
+import React, { ReactNode, memo, useEffect, useState, useCallback, useRef } from 'react'
 import transcriptData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
+import pauseButton from '../../../img/pause-cropped.svg'
+import playButton from '../../../img/play-cropped.svg'
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
@@ -12,13 +14,24 @@ interface LineProps {
     active: boolean
     activeWord: number
     audio: HTMLAudioElement
+    containerRef: React.RefObject<HTMLDivElement>
 }
 
-const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) {
+const Line = memo(function Line({ line, active, activeWord, audio, containerRef }: LineProps) {
     const words: ReactNode[] = []
     const onclick = (time: number) => {
         audio.currentTime = time
     }
+
+    const lineRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        if (active && containerRef.current && lineRef.current) {
+            const relativeFontSize = parseFloat(getComputedStyle(containerRef.current).fontSize)
+            const pos = Math.max(0, lineRef.current.offsetTop - 3 * 2.25 * relativeFontSize)
+
+            containerRef.current.scroll(0, pos)
+        }
+    }, [active])
 
     if (line.type == 'pause') {
         words.push(
@@ -46,12 +59,44 @@ const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) 
             )
         })
     }
-    return <p>{words}</p>
+    return <p ref={lineRef}>{words}</p>
+})
+
+const Controller = memo(function Controller({ audio }: props) {
+    const [isPlaying, setIsPlaying] = useState(!audio.current.paused)
+
+    useEffect(() => {
+        function onpause() {
+            setIsPlaying(false)
+        }
+
+        function onplay() {
+            setIsPlaying(true)
+        }
+
+        audio.current.addEventListener('pause', onpause)
+        audio.current.addEventListener('play', onplay)
+
+        return () => {
+            audio.current.removeEventListener('pause', onpause)
+            audio.current.removeEventListener('play', onplay)
+        }
+    }, [])
+
+    return (
+        <div className={style.controller}>
+            <img
+                src={isPlaying ? pauseButton : playButton}
+                onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
+            />
+        </div>
+    )
 })
 
 export default function Music({ audio }: props) {
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
+    const containerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         ;(window as any).audio = audio.current
@@ -93,6 +138,7 @@ export default function Music({ audio }: props) {
                         activeWord: active ? activeWord : -1,
                         line,
                         audio: audio.current,
+                        containerRef,
                     }}
                 />,
             )
@@ -110,7 +156,10 @@ export default function Music({ audio }: props) {
                     <span>Coldplay</span>
                 </div>
             </div>
-            <div className={style.lyrics}>{genLines()}</div>
+            <div className={style.lyrics} ref={containerRef}>
+                {genLines()}
+            </div>
+            <Controller {...{ audio }} />
         </div>
     )
 }

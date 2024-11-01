@@ -1,10 +1,11 @@
 .container {
     display: grid;
-    grid-template-rows: 5em auto 5em;
+    grid-template-rows: 5em auto 2em;
     gap: 1em;
     width: 40em;
     max-width: 100%;
-    height: 100%;
+    height: calc(100% - 4em);
+    padding-bottom: 2em;
 }
 
 .info {
@@ -46,6 +47,8 @@
     width: 100%;
     gap: 1em;
     padding: 0 0.5em;
+    position: relative;
+    scroll-behavior: smooth;
 
     & > p {
         font-family: 'Bungee', sans-serif;
@@ -81,4 +84,16 @@
 .line {
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
+}
+
+.controller {
+    padding: 0 0.8em;
+    display: grid;
+    grid-template-columns: 4em auto;
+    align-items: center;
+
+    & > img {
+        height: 2em;
+        cursor: pointer;
+    }
 }
