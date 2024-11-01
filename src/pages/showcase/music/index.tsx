@@ -49,7 +49,11 @@ const Line = memo(function Line({ line, active, activeWord, audio, containerRef 
                 <span
                     key={'w' + word.time}
                     onClick={() => onclick(word.time)}
-                    className={active && activeWord >= i ? style.wordActive : ''}
+                    className={
+                        (active && activeWord >= i ? style.wordActive : '') +
+                        ' ' +
+                        (activeWord > i ? style.wordPassive : '')
+                    }
                 >
                     {word.word + ' '}
                 </span>,

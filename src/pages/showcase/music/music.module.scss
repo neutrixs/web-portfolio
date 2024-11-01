@@ -58,7 +58,7 @@
 
     & span {
         opacity: 0.5;
-        transition: transform 0.2s ease-out, scale 0.2s ease-out;
+        transition: transform 0.3s cubic-bezier(0.09, 0.66, 0.19, 1.74), opacity 0.1s linear;
         transform: translate(0);
         display: inline-block;
         cursor: pointer;
@@ -66,7 +66,10 @@
 
     .wordActive {
         opacity: 1;
-        transform: translate(-0.1em, -0.1em);
+        transform: translate(-0.05em, -0.1em);
+    }
+    .wordPassive {
+        opacity: 0.75;
     }
 
     .whitespace {
