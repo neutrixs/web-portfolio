@@ -104,6 +104,7 @@
 .seek {
     display: grid;
     align-items: center;
+    cursor: pointer;
 }
 
 .seekFirst {
@@ -149,8 +150,4 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
-    svg {
-        width: 4em;
-    }
 }

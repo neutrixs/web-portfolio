@@ -3,6 +3,8 @@ import style from './music.module.scss'
 import pauseButton from '../../../img/pause-cropped.svg'
 import playButton from '../../../img/play-cropped.svg'
 
+const SVG_WIDTH_EM = 2
+
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
 }
@@ -13,7 +15,13 @@ interface SeekbarProps {
 
 const Sine = memo(function Sine() {
     return (
-        <svg width="500" height="105" viewBox="0 0 6.2832 1" xmlns="http://www.w3.org/2000/svg">
+        <svg
+            width="500"
+            height="105"
+            style={{ width: `${SVG_WIDTH_EM}em` }}
+            viewBox="0 0 6.2832 1"
+            xmlns="http://www.w3.org/2000/svg"
+        >
             <path
                 d="
   M -3.1416 0.5
@@ -29,7 +37,7 @@ const Sine = memo(function Sine() {
 "
                 fill="none"
                 stroke="#33ff99"
-                stroke-width="0.8"
+                stroke-width="1.6"
             />
         </svg>
     )
@@ -51,7 +59,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
             if (activeSeekRef.current) {
                 const fontSize = parseFloat(getComputedStyle(activeSeekRef.current).fontSize)
                 const width = activeSeekRef.current.clientWidth
-                const eachWidth = 4 * fontSize
+                const eachWidth = SVG_WIDTH_EM * fontSize
 
                 setAmount(Math.ceil(width / eachWidth) + 1)
             }
@@ -70,7 +78,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                 setTranslate((prev) => {
                     const dec = 0.02
                     let newval = prev - dec
-                    if (newval < -4) newval += 4
+                    if (newval < -SVG_WIDTH_EM) newval += SVG_WIDTH_EM
 
                     return newval
                 })
@@ -119,6 +127,15 @@ const Controller = memo(function Controller({ audio }: props) {
 
     const gridTemplate = `${progress * 100}% ${100 - progress * 100}%`
 
+    function onclick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = e.clientX - rect.left
+
+        const width = e.currentTarget.clientWidth
+        audio.current.currentTime = (x * audio.current.duration) / width
+        setProgress(x / width)
+    }
+
     useEffect(() => {
         function onpause() {
             setIsPlaying(false)
@@ -149,7 +166,11 @@ const Controller = memo(function Controller({ audio }: props) {
                 src={isPlaying ? pauseButton : playButton}
                 onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
             />
-            <div className={style.seek} style={{ gridTemplateColumns: gridTemplate }}>
+            <div
+                onClick={onclick}
+                className={style.seek}
+                style={{ gridTemplateColumns: gridTemplate }}
+            >
                 <Seekbar isPlaying={isPlaying} />
             </div>
         </div>
