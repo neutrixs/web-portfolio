@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from 'react'
+import React, { memo, useEffect, useState, useRef, ReactNode } from 'react'
 import style from './music.module.scss'
 import pauseButton from '../../../img/pause-cropped.svg'
 import playButton from '../../../img/play-cropped.svg'
@@ -11,10 +11,11 @@ interface SeekbarProps {
     isPlaying: boolean
 }
 
-const sine = (
-    <svg width="500" height="105" viewBox="0 0 6.2832 1" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="
+const Sine = memo(function Sine() {
+    return (
+        <svg width="500" height="105" viewBox="0 0 6.2832 1" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="
   M -3.1416 0.5
   C -1.0022 0, -0.5123 0.25615, 0 0.5
   M 0 0.5
@@ -26,20 +27,85 @@ const sine = (
   M 6.2832 0.5
   C 6.7955 0.75615, 7.2855 1, 7.853 1
 "
-            fill="none"
-            stroke="#33ff99"
-            stroke-width="0.5"
-        />
-    </svg>
-)
+                fill="none"
+                stroke="#33ff99"
+                stroke-width="0.8"
+            />
+        </svg>
+    )
+})
 
 const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
     const activeSeekRef = useRef<HTMLDivElement>(null)
+    const wavesRef = useRef<HTMLDivElement>(null)
+    const [amount, setAmount] = useState(1)
+    const [translate, setTranslate] = useState(0)
+    const isPlayingRef = useRef(isPlaying)
+
+    useEffect(() => {
+        isPlayingRef.current = isPlaying
+    }, [isPlaying])
+
+    useEffect(() => {
+        function amountCheck() {
+            if (activeSeekRef.current) {
+                const fontSize = parseFloat(getComputedStyle(activeSeekRef.current).fontSize)
+                const width = activeSeekRef.current.clientWidth
+                const eachWidth = 4 * fontSize
+
+                setAmount(Math.ceil(width / eachWidth) + 1)
+            }
+        }
+
+        const observer = new ResizeObserver(() => {
+            amountCheck()
+        })
+
+        if (activeSeekRef.current) {
+            observer.observe(activeSeekRef.current)
+        }
+
+        const interval = setInterval(() => {
+            if (isPlayingRef.current) {
+                setTranslate((prev) => {
+                    const dec = 0.02
+                    let newval = prev - dec
+                    if (newval < -4) newval += 4
+
+                    return newval
+                })
+            }
+        }, 50)
+
+        return () => {
+            if (activeSeekRef.current) {
+                observer.unobserve(activeSeekRef.current)
+            }
+            clearInterval(interval)
+        }
+    }, [])
+
+    function generateSines(amount: number) {
+        const el: ReactNode[] = []
+        for (let i = 0; i < amount; i++) {
+            el.push(<Sine key={'sine' + i} />)
+        }
+
+        return el
+    }
 
     return (
         <>
             <div ref={activeSeekRef} className={style.seekFirst}>
-                {sine}
+                <div className={style.waveContainer}>
+                    <div
+                        className={style.waves}
+                        ref={wavesRef}
+                        style={{ transform: `translateX(${translate}em)` }}
+                    >
+                        {generateSines(amount)}
+                    </div>
+                </div>
                 <div className={style.dot} />
             </div>
             <div className={style.seekSecond}></div>

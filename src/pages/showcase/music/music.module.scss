@@ -108,12 +108,8 @@
 
 .seekFirst {
     position: relative;
-    height: 0.5em;
+    height: 1.25em;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
 
     & .dot {
         position: absolute;
@@ -131,4 +127,30 @@
     height: 0.5em;
     width: 100%;
     background-color: hsla(150, 100%, 60%, 50%);
+}
+
+.waveContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.waves {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    svg {
+        width: 4em;
+    }
 }
