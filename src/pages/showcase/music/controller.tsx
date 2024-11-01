@@ -23,18 +23,13 @@ const Sine = memo(function Sine() {
             xmlns="http://www.w3.org/2000/svg"
         >
             <path
-                d="
-  M -3.1416 0.5
-  C -1.0022 0, -0.5123 0.25615, 0 0.5
-  M 0 0.5
-  C 0.5123 0.75615, 1.0023 1, 1.5708 1
-  C 2.1393 1, 2.6293 0.75615, 3.1416 0.5
-  M 3.1416 0.5
-  C 3.654 0.25615, 4.144 0, 4.7124 0
-  C 5.281 0, 5.7709 0.25615, 6.2832 0.5
-  M 6.2832 0.5
-  C 6.7955 0.75615, 7.2855 1, 7.853 1
-"
+                d="M 7.853 1
+                C 7.2855 1, 6.7955 0.75615, 6.2832 0.5
+                C 5.7709 0.25615, 5.281 0, 4.7124 0
+                C 4.144 0, 3.654 0.25615, 3.1416 0.5
+                C 2.6293 0.75615, 2.1393 1, 1.5708 1
+                C 1.0023 1, 0.5123 0.75615, 0 0.5
+                C -0.5123 0.25615, -1.0022 0, -3.1416 0.5"
                 fill="none"
                 stroke="#33ff99"
                 stroke-width="1.6"
@@ -48,6 +43,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
     const wavesRef = useRef<HTMLDivElement>(null)
     const [amount, setAmount] = useState(1)
     const [translate, setTranslate] = useState(0)
+    const [raise, setRaise] = useState(0)
     const isPlayingRef = useRef(isPlaying)
 
     useEffect(() => {
@@ -79,6 +75,22 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                     const dec = 0.02
                     let newval = prev - dec
                     if (newval < -SVG_WIDTH_EM) newval += SVG_WIDTH_EM
+
+                    if (activeSeekRef.current) {
+                        const fontSize = parseFloat(
+                            getComputedStyle(activeSeekRef.current).fontSize,
+                        )
+                        const width = activeSeekRef.current.clientWidth
+                        const eachWidth = SVG_WIDTH_EM * fontSize
+
+                        // 0.75 is the dot height / 4, idk why but it works
+                        const sineX =
+                            (-width / eachWidth + newval / SVG_WIDTH_EM + 0.75 / 2 / SVG_WIDTH_EM) *
+                            2 *
+                            Math.PI
+                        const height = -Math.sin(sineX) * 0.1
+                        setRaise(height)
+                    }
 
                     return newval
                 })
@@ -114,7 +126,10 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                         {generateSines(amount)}
                     </div>
                 </div>
-                <div className={style.dot} />
+                <div
+                    className={style.dot}
+                    style={{ transform: `translate(-50%, calc(-50% + ${raise}em))` }}
+                />
             </div>
             <div className={style.seekSecond}></div>
         </>
