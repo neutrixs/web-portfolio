@@ -4,6 +4,7 @@ import pauseButton from '../../../img/pause-cropped.svg'
 import playButton from '../../../img/play-cropped.svg'
 
 const SVG_WIDTH_EM = 2
+const PATH_LENGTH = 13.3135
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
@@ -13,7 +14,14 @@ interface SeekbarProps {
     isPlaying: boolean
 }
 
-const Sine = memo(function Sine() {
+interface SineProps {
+    isFirst: boolean
+    percentActive: number
+}
+
+const Sine = memo(function Sine({ isFirst, percentActive }: SineProps) {
+    const percentage = 0.4 * (1 - percentActive) * PATH_LENGTH
+
     return (
         <svg
             width="1000"
@@ -36,8 +44,11 @@ const Sine = memo(function Sine() {
    C 4.1994 0.75615, 3.7094 1, 3.1409 1"
                 fill="none"
                 stroke="#33ff99"
-                stroke-width="1.6"
-                stroke-linecap="round"
+                strokeWidth="1.6"
+                {...{
+                    strokeDasharray: isFirst ? `${percentage}, ${PATH_LENGTH}` : undefined,
+                    strokeLinecap: isFirst ? 'round' : 'square',
+                }}
             />
         </svg>
     )
@@ -79,7 +90,7 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                 setTranslate((prev) => {
                     const dec = 0.02
                     let newval = prev - dec
-                    if (newval < -2 * SVG_WIDTH_EM) newval += SVG_WIDTH_EM
+                    if (newval < -1.8 * SVG_WIDTH_EM) newval += SVG_WIDTH_EM
 
                     if (activeSeekRef.current) {
                         const fontSize = parseFloat(
@@ -113,7 +124,17 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
     function generateSines(amount: number) {
         const el: ReactNode[] = []
         for (let i = 0; i < amount; i++) {
-            el.push(<Sine key={'sine' + i} />)
+            if (i == 0) {
+                el.push(
+                    <Sine
+                        key={'sine' + i}
+                        isFirst={true}
+                        percentActive={-(translate + SVG_WIDTH_EM) / SVG_WIDTH_EM}
+                    />,
+                )
+            } else {
+                el.push(<Sine key={'sine' + i} isFirst={false} percentActive={0} />)
+            }
         }
 
         return el
