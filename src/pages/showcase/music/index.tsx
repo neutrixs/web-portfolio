@@ -16,13 +16,17 @@ interface LineProps {
 
 const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) {
     const words: ReactNode[] = []
-    const onclick = useCallback(() => {
-        audio.currentTime = line.time
-    }, [])
+    const onclick = (time: number) => {
+        audio.currentTime = time
+    }
 
     if (line.type == 'pause') {
         words.push(
-            <span key={'p_0'} className={active ? style.wordActive : ''}>
+            <span
+                key={'p_0'}
+                className={active ? style.wordActive : ''}
+                onClick={() => onclick(line.time)}
+            >
                 ...
             </span>,
         )
@@ -31,6 +35,7 @@ const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) 
             words.push(
                 <span
                     key={'w' + word.time}
+                    onClick={() => onclick(word.time)}
                     className={active && activeWord >= i ? style.wordActive : ''}
                 >
                     {word.word + ' '}
@@ -41,7 +46,7 @@ const Line = memo(function Line({ line, active, activeWord, audio }: LineProps) 
             )
         })
     }
-    return <p onClick={onclick}>{words}</p>
+    return <p>{words}</p>
 })
 
 export default function Music({ audio }: props) {
@@ -49,11 +54,12 @@ export default function Music({ audio }: props) {
     const [activeWord, setActiveWord] = useState(0)
 
     useEffect(() => {
+        ;(window as any).audio = audio.current
         const interval = setInterval(() => {
             const active =
                 transcriptData
                     .map((val, i) => ({ time: val.time, i }))
-                    .filter((val) => val.time <= audio.current.currentTime + 0.1)
+                    .filter((val) => val.time <= audio.current.currentTime + 0.2)
                     .at(-1)?.i ?? 0
 
             const line = transcriptData[active]
@@ -62,9 +68,8 @@ export default function Music({ audio }: props) {
                 activeWordCurrent =
                     line.words
                         .map((val, i) => ({ time: val.time, i }))
-                        .filter((val) => val.time <= audio.current.currentTime + 0.1)
+                        .filter((val) => val.time <= audio.current.currentTime + 0.2)
                         .at(-1)?.i ?? 0
-                console.log(activeWordCurrent)
             }
 
             setActiveLine(active)

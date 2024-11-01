@@ -58,6 +58,7 @@
         transition: transform 0.2s ease-out, scale 0.2s ease-out;
         transform: translate(0);
         display: inline-block;
+        cursor: pointer;
     }
 
     .wordActive {
