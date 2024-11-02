@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Documents</title>
+    </head>
+    <body>
+        <input type="file" id="song" accept="audio/mp3" />
+        <textarea name="lyrics" id="lyrics"></textarea>
+        <button onclick="run()">Click click</button>
+        <br />
+        <p id="cword"></p>
+        <p id="nword"></p>
+        <textarea id="inputdata"></textarea>
+        <button onclick="justrun()">or just try to play it</button>
+        <p id="try"></p>
+
+        <script>
+            let audio
+            let lineIndex = 0
+            let wordsIndex = 0
+            const input = document.getElementById('song')
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0]
+                if (file) {
+                    audio = new Audio(URL.createObjectURL(file))
+                    clearInterval(interval)
+                }
+            })
+
+            let running = false
+            let data
+
+            function initiate() {
+                const val = document.getElementById('lyrics').value
+                data = val.split('\n').map((line) => {
+                    if (!line) return { type: 'pause', time: 0 }
+                    return {
+                        type: 'line',
+                        time: 0,
+                        words: line.split(/[\s-]+/).map((word) => ({ word, time: 0 })),
+                    }
+                })
+            }
+
+            function run() {
+                if (!running) initiate()
+
+                if (!running) {
+                    audio.currentTime = Math.max(data[lineIndex].time - 10, 0)
+                    audio.play()
+
+                    if (lineIndex == 0 && data[lineIndex].type == 'pause') {
+                        lineIndex += 1
+                        wordsIndex = 0
+                    }
+
+                    running = true
+                } else {
+                    if (wordsIndex == 0) {
+                        data[lineIndex].time = audio.currentTime
+                    }
+
+                    if (data[lineIndex].type == 'pause') {
+                        wordsIndex = 0
+                        lineIndex += 1
+                    } else {
+                        data[lineIndex].words[wordsIndex].time = audio.currentTime
+                        if (wordsIndex < data[lineIndex].words.length - 1) {
+                            wordsIndex += 1
+                        } else {
+                            lineIndex += 1
+                            wordsIndex = 0
+                        }
+                    }
+                }
+
+                let currentWord =
+                    data[lineIndex].type == 'pause' ? '...' : data[lineIndex].words[wordsIndex].word
+                let lineIsFinished =
+                    data[lineIndex].type == 'pause'
+                        ? true
+                        : wordsIndex == data[lineIndex].words.length - 1
+                let nextLine = !lineIsFinished ? lineIndex : lineIndex + 1
+
+                let nextWord = ''
+                if (data[nextLine]) {
+                    nextWord =
+                        data[nextLine].type == 'pause'
+                            ? '...'
+                            : data[nextLine].words[lineIsFinished ? 0 : wordsIndex + 1].word
+                }
+
+                document.getElementById('cword').textContent = currentWord
+                document.getElementById('nword').textContent = nextWord
+            }
+
+            let interval
+
+            function justrun() {
+                data = JSON.parse(document.getElementById('inputdata').value)
+                audio.play()
+                clearInterval(interval)
+                interval = setInterval(() => {
+                    let currentword = ''
+                    data.forEach((line) => {
+                        if (line.time > audio.currentTime) return
+                        if (line.type == 'pause') {
+                            currentword = '...'
+                        } else {
+                            line.words.forEach((word) => {
+                                if (word.time <= audio.currentTime) {
+                                    currentword = word.word
+                                }
+                            })
+                        }
+                    })
+
+                    document.getElementById('try').textContent = currentword
+                }, 50)
+            }
+        </script>
+    </body>
+</html>
