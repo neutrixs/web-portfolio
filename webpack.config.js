@@ -51,7 +51,7 @@ const config = (dev, name) => ({
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.(png|jpe?g|webp)/,
+                test: /\.(png|jpe?g|webp|ogg)/,
                 loader: 'file-loader',
                 options: {
                     name: `assets/${name}.[ext]`,

@@ -20,15 +20,13 @@
     right: 0;
     bottom: 0;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto auto;
     padding: 1.5em;
     gap: 1.5em;
 
-    & > div {
+    & > .arrow {
         background-color: hsl(240, 14%, 25%);
-        width: 3em;
-        height: 3em;
         border-radius: 1.5em;
 
         display: flex;
@@ -38,6 +36,11 @@
         &:last-child {
             transform: rotate(180deg);
         }
+    }
+
+    & > div {
+        width: 3em;
+        height: 3em;
     }
 
     & img {
