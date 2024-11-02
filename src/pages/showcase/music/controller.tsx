@@ -269,9 +269,11 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
         function stopDrag() {
             document.removeEventListener('mousemove', drag)
             document.removeEventListener('touchmove', drag)
-            isSeeking.current = false
-            ctimeOverriden.current = false
-            audio.current.currentTime = ctimeOverride.current
+            if (isSeeking.current) {
+                isSeeking.current = false
+                ctimeOverriden.current = false
+                audio.current.currentTime = ctimeOverride.current
+            }
         }
 
         audio.current.addEventListener('pause', onpause)
