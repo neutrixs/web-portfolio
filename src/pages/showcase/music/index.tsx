@@ -80,10 +80,11 @@ export default function Music({ audio }: props) {
     useEffect(() => {
         ;(window as any).audio = audio.current
         const interval = setInterval(() => {
+            const time = ctimeOverriden.current ? ctimeOverride.current : audio.current.currentTime
             const active =
                 transcriptData
                     .map((val, i) => ({ time: val.time, i }))
-                    .filter((val) => val.time <= audio.current.currentTime + 0.2)
+                    .filter((val) => val.time <= time + 0.2)
                     .at(-1)?.i ?? 0
 
             const line = transcriptData[active]
@@ -92,7 +93,7 @@ export default function Music({ audio }: props) {
                 activeWordCurrent =
                     line.words
                         .map((val, i) => ({ time: val.time, i }))
-                        .filter((val) => val.time <= audio.current.currentTime + 0.2)
+                        .filter((val) => val.time <= time + 0.2)
                         .at(-1)?.i ?? 0
             }
 
