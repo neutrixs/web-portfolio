@@ -197,15 +197,6 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
 
     const gridTemplate = `${progress * 100}% ${100 - progress * 100}%`
 
-    function onclick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        const rect = e.currentTarget.getBoundingClientRect()
-        const x = e.clientX - rect.left
-
-        const width = e.currentTarget.clientWidth
-        audio.current.currentTime = (x * audio.current.duration) / width
-        setProgress(x / width)
-    }
-
     function formatTime(seconds: number) {
         const minutes = Math.floor(seconds / 60)
         const secs = seconds % 60
@@ -227,24 +218,11 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
         }
 
         function startDrag(e: MouseEvent | TouchEvent): void {
-            const rect = controllerSeek.current?.getBoundingClientRect() as DOMRect
-            let x = 0
-            if (e instanceof MouseEvent) {
-                x = e.clientX - rect.left
-            } else if (e instanceof TouchEvent) {
-                x = e.touches[0].clientX - rect.left
-            }
-
-            const width = controllerSeek.current?.clientWidth ?? 0
-            x = Math.min(width, Math.max(0, x))
-
-            setProgress(x / width)
-            ctimeOverriden.current = true
-            ctimeOverride.current = (x / width) * audio.current.duration
+            isSeeking.current = true
+            drag(e)
 
             document.addEventListener('mousemove', drag)
             document.addEventListener('touchmove', drag)
-            isSeeking.current = true
             e.preventDefault()
         }
 
@@ -305,7 +283,6 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
             />
             <div className={style.controllerRightSide}>
                 <div
-                    onClick={onclick}
                     className={style.seek}
                     style={{ gridTemplateColumns: gridTemplate }}
                     ref={controllerSeek}
