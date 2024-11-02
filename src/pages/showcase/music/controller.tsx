@@ -222,7 +222,7 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
         }
 
         function seekUpdate() {
-            if (isSeeking) return
+            if (isSeeking.current) return
             setProgress(audio.current.currentTime / audio.current.duration)
         }
 
