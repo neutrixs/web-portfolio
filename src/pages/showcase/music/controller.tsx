@@ -227,13 +227,21 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
         }
 
         function startDrag(e: MouseEvent | TouchEvent): void {
-            // const rect = controllerSeek.current?.getBoundingClientRect() as DOMRect
-            // let x
-            // if (e instanceof MouseEvent) {
-            //     x = e.clientX - rect.left
-            // } else if (e instanceof TouchEvent) {
-            //     x = e.touches[0].clientX - rect.left
-            // }
+            const rect = controllerSeek.current?.getBoundingClientRect() as DOMRect
+            let x = 0
+            if (e instanceof MouseEvent) {
+                x = e.clientX - rect.left
+            } else if (e instanceof TouchEvent) {
+                x = e.touches[0].clientX - rect.left
+            }
+
+            const width = controllerSeek.current?.clientWidth ?? 0
+            x = Math.min(width, Math.max(0, x))
+
+            setProgress(x / width)
+            ctimeOverriden.current = true
+            ctimeOverride.current = (x / width) * audio.current.duration
+
             document.addEventListener('mousemove', drag)
             document.addEventListener('touchmove', drag)
             isSeeking.current = true
@@ -263,6 +271,7 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
             document.removeEventListener('touchmove', drag)
             isSeeking.current = false
             ctimeOverriden.current = false
+            audio.current.currentTime = ctimeOverride.current
         }
 
         audio.current.addEventListener('pause', onpause)
