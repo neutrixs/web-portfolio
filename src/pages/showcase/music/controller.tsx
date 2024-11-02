@@ -4,7 +4,7 @@ import pauseButton from '../../../img/pause.svg'
 import playButton from '../../../img/play.svg'
 
 const SVG_WIDTH_EM = 2
-const PATH_LENGTH = 13.3135
+const PATH_LENGTH = 16.09857
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
@@ -23,8 +23,8 @@ interface SineProps {
 }
 
 const Sine = memo(function Sine({ isFirst, percentActive, isPlaying }: SineProps) {
-    // for some reason, this movement is slower than the movement of the wave, so that 1.25 is the 'magic constant'
-    const percentage = (0.4 * (1 - percentActive * 1.25) + 0.1) * PATH_LENGTH
+    // the movement is just slightly slower than the div's movement, so there's this magic constant
+    const percentage = 0.4 * (1 - percentActive * 1.03) * PATH_LENGTH
 
     const active = `M 18.2801 0
     18.2801 0, 17.7901 0.25615, 17.2777 0.5
