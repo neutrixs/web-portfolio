@@ -153,7 +153,7 @@
     align-items: center;
 
     svg path {
-        transition: d 0.5s linear;
+        transition: d 1s cubic-bezier(0.16, 0.86, 0.28, 0.97);
     }
 }
 
