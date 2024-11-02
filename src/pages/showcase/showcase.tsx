@@ -30,6 +30,10 @@ export default function Showcase({ height, inView }: props) {
     const { setScrollable } = useContext(ScrollableContext)
 
     useEffect(() => {
+        audio.current.load()
+    }, [])
+
+    useEffect(() => {
         if (inView) {
             setTimeout(() => setTitleShow(true), 300)
             setTimeout(() => setGalleryShow(true), 600)
