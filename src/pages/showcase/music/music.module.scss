@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    grid-template-rows: 5em auto 2em;
+    grid-template-rows: 5em auto 3em;
     gap: 1em;
     width: 40em;
     max-width: 100%;
@@ -150,4 +150,26 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+
+    svg path {
+        transition: d 0.5s linear;
+    }
+}
+
+.controllerRightSide {
+    display: grid;
+    grid-template-rows: 2em 1em;
+}
+
+.progressTime {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > p {
+        font-family: 'Rubik', sans-serif;
+        &:nth-child(2) {
+            text-align: right;
+        }
+    }
 }

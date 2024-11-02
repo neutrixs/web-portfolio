@@ -8,6 +8,8 @@ const PATH_LENGTH = 13.3135
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
+    ctimeOverriden: React.MutableRefObject<boolean>
+    ctimeOverride: React.MutableRefObject<number>
 }
 
 interface SeekbarProps {
@@ -15,12 +17,39 @@ interface SeekbarProps {
 }
 
 interface SineProps {
+    isPlaying: boolean
     isFirst: boolean
     percentActive: number
 }
 
-const Sine = memo(function Sine({ isFirst, percentActive }: SineProps) {
-    const percentage = 0.4 * (1 - percentActive) * PATH_LENGTH
+const Sine = memo(function Sine({ isFirst, percentActive, isPlaying }: SineProps) {
+    // for some reason, this movement is slower than the movement of the wave, so that 1.25 is the 'magic constant'
+    const percentage = (0.4 * (1 - percentActive * 1.25) + 0.1) * PATH_LENGTH
+
+    const active = `M 18.2801 0
+    18.2801 0, 17.7901 0.25615, 17.2777 0.5
+   C 16.7654 0.25615, 16.2755 0, 15.707 0
+   C 15.1385 0, 14.6485 0.25615, 14.1361 0.5
+   C 13.6238 0.75615, 13.1338 1, 12.5653 1
+   C 11.9968 1, 11.5068 0.75615, 10.9944 0.5
+   C 10.4821 0.25615, 9.9922 0, 9.4236 0
+   C 8.8551 0, 8.3651 0.25615, 7.853 0.5
+   C 7.3409 0.75615, 6.8509 1, 6.2823 1
+   C 5.7138 1, 5.2238 0.75615, 4.7117 0.5
+   C 4.1994 0.75615, 3.7094 1, 3.1409 1`
+
+    const passive = `M 18.2801 0.5
+    18.2801 0.5, 17.7901 0.5, 17.2777 0.5
+   C 16.7654 0.5, 16.2755 0.5, 15.707 0.5
+   C 15.1385 0.5, 14.6485 0.5, 14.1361 0.5
+   C 13.6238 0.5, 13.1338 0.5, 12.5653 0.5
+   C 11.9968 0.5, 11.5068 0.5, 10.9944 0.5
+   C 10.4821 0.5, 9.9922 0.5, 9.4236 0.5
+   C 8.8551 0.5, 8.3651 0.5, 7.853 0.5
+   C 7.3409 0.5, 6.8509 0.5, 6.2823 0.5
+   C 5.7138 0.5, 5.2238 0.5, 4.7117 0.5
+   C 4.1994 0.5, 3.7094 0.5, 3.1409 0.5
+`
 
     return (
         <svg
@@ -31,17 +60,7 @@ const Sine = memo(function Sine({ isFirst, percentActive }: SineProps) {
             style={{ width: `${SVG_WIDTH_EM * 2}em` }}
         >
             <path
-                d=" M 18.2801 0
-    18.2801 0, 17.7901 0.25615, 17.2777 0.5
-   C 16.7654 0.25615, 16.2755 0, 15.707 0
-   C 15.1385 0, 14.6485 0.25615, 14.1361 0.5
-   C 13.6238 0.75615, 13.1338 1, 12.5653 1
-   C 11.9968 1, 11.5068 0.75615, 10.9944 0.5
-   C 10.4821 0.25615, 9.9922 0, 9.4236 0
-   C 8.8551 0, 8.3651 0.25615, 7.853 0.5
-   C 7.3409 0.75615, 6.8509 1, 6.2823 1
-   C 5.7138 1, 5.2238 0.75615, 4.7117 0.5
-   C 4.1994 0.75615, 3.7094 1, 3.1409 1"
+                d={isPlaying ? active : passive}
                 fill="none"
                 stroke="#33ff99"
                 strokeWidth="1.6"
@@ -130,10 +149,18 @@ const Seekbar = memo(function Seekbar({ isPlaying }: SeekbarProps) {
                         key={'sine' + i}
                         isFirst={true}
                         percentActive={-(translate + SVG_WIDTH_EM) / SVG_WIDTH_EM}
+                        isPlaying={isPlaying}
                     />,
                 )
             } else {
-                el.push(<Sine key={'sine' + i} isFirst={false} percentActive={0} />)
+                el.push(
+                    <Sine
+                        key={'sine' + i}
+                        isFirst={false}
+                        percentActive={0}
+                        isPlaying={isPlaying}
+                    />,
+                )
             }
         }
 
@@ -177,6 +204,12 @@ const Controller = memo(function Controller({ audio }: props) {
         setProgress(x / width)
     }
 
+    function formatTime(seconds: number) {
+        const minutes = Math.floor(seconds / 60)
+        const secs = seconds % 60
+        return `${minutes}:${secs.toString().padStart(2, '0')}`
+    }
+
     useEffect(() => {
         function onpause() {
             setIsPlaying(false)
@@ -207,12 +240,18 @@ const Controller = memo(function Controller({ audio }: props) {
                 src={isPlaying ? pauseButton : playButton}
                 onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
             />
-            <div
-                onClick={onclick}
-                className={style.seek}
-                style={{ gridTemplateColumns: gridTemplate }}
-            >
-                <Seekbar isPlaying={isPlaying} />
+            <div className={style.controllerRightSide}>
+                <div
+                    onClick={onclick}
+                    className={style.seek}
+                    style={{ gridTemplateColumns: gridTemplate }}
+                >
+                    <Seekbar isPlaying={isPlaying} />
+                </div>
+                <div className={style.progressTime}>
+                    <p>{formatTime(Math.floor(progress * audio.current.duration))}</p>
+                    <p>{formatTime(Math.floor(audio.current.duration))}</p>
+                </div>
             </div>
         </div>
     )

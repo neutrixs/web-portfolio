@@ -23,6 +23,10 @@ const Line = memo(function Line({ line, active, activeWord, audio, containerRef 
     }
 
     const lineRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        audio.play()
+    }, [])
     useEffect(() => {
         if (active && containerRef.current && lineRef.current) {
             const relativeFontSize = parseFloat(getComputedStyle(containerRef.current).fontSize)
@@ -69,6 +73,9 @@ export default function Music({ audio }: props) {
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
     const containerRef = useRef<HTMLDivElement>(null)
+
+    const ctimeOverriden = useRef(false)
+    const ctimeOverride = useRef(0)
 
     useEffect(() => {
         ;(window as any).audio = audio.current
@@ -131,7 +138,7 @@ export default function Music({ audio }: props) {
             <div className={style.lyrics} ref={containerRef}>
                 {genLines()}
             </div>
-            <Controller {...{ audio }} />
+            <Controller {...{ audio, ctimeOverride, ctimeOverriden }} />
         </div>
     )
 }
