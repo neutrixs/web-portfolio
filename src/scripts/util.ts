@@ -18,3 +18,16 @@ export function sleep(ms: number) {
         setTimeout(a, ms)
     })
 }
+
+/**
+ *
+ * @param em number
+ * @param el HTMLElement
+ * @returns number
+ *
+ * @description converts EM to PX relative to the element's font-size
+ */
+export function EMToPX(em: number, el: HTMLElement) {
+    const fontSize = parseFloat(getComputedStyle(el).fontSize)
+    return em * fontSize
+}
