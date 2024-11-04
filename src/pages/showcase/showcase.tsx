@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import coloratura from '../../audio/coloratura.ogg'
+import songsData from './music/lyrics'
 import Music from './music'
 
 import style from './showcase.module.scss'
@@ -25,13 +25,9 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelShow, setSubpanelShow] = useState(false)
     const [subpanelTitle, setSubpanelTitle] = useState('')
     const [subpanelContent, setSubpanelContent] = useState<ReactNode>(null)
-    const audio = useRef(new Audio(coloratura))
+    const audio = useRef(new Audio(songsData[0].audioURL))
 
     const { setScrollable } = useContext(ScrollableContext)
-
-    useEffect(() => {
-        audio.current.load()
-    }, [])
 
     useEffect(() => {
         if (inView) {

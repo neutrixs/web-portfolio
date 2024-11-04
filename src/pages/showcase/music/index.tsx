@@ -1,6 +1,6 @@
-import React, { ReactNode, memo, useEffect, useState, useCallback, useRef } from 'react'
+import React, { ReactNode, memo, useEffect, useState, useLayoutEffect, useRef } from 'react'
 import Controller from './controller'
-import transcriptData, { LineData, PauseData } from './lyrics'
+import songsData, { LineData, PauseData } from './lyrics'
 import style from './music.module.scss'
 import coloraturaImg from '../../../img/coloratura.png'
 
@@ -24,9 +24,6 @@ const Line = memo(function Line({ line, active, activeWord, audio, containerRef 
 
     const lineRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        audio.play()
-    }, [])
     useEffect(() => {
         if (active && containerRef.current && lineRef.current) {
             const relativeFontSize = parseFloat(getComputedStyle(containerRef.current).fontSize)
@@ -72,14 +69,29 @@ const Line = memo(function Line({ line, active, activeWord, audio, containerRef 
 export default function Music({ audio }: props) {
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
+    const [songIndex, setSongIndex] = useState(0)
+    const songIndexRef = useRef(0)
     const containerRef = useRef<HTMLDivElement>(null)
 
     const ctimeOverriden = useRef(false)
     const ctimeOverride = useRef(0)
 
+    useLayoutEffect(() => {
+        function play() {
+            audio.current.play()
+        }
+
+        songIndexRef.current = songIndex
+        audio.current.src = songsData[songIndex].audioURL
+        audio.current.currentTime = 0
+        audio.current.addEventListener('loadedmetadata', play)
+
+        return () => audio.current.removeEventListener('loadedmetadata', play)
+    }, [songIndex])
+
     useEffect(() => {
-        ;(window as any).audio = audio.current
         const interval = setInterval(() => {
+            const transcriptData = songsData[songIndexRef.current].lyrics
             const time = ctimeOverriden.current ? ctimeOverride.current : audio.current.currentTime
             const active =
                 transcriptData
@@ -105,6 +117,7 @@ export default function Music({ audio }: props) {
     }, [])
 
     function genLines() {
+        const transcriptData = songsData[songIndex].lyrics
         const lines: ReactNode[] = []
         for (let i = 0; i < transcriptData.length; i++) {
             const line = transcriptData[i]
@@ -130,10 +143,10 @@ export default function Music({ audio }: props) {
     return (
         <div className={style.container}>
             <div className={style.info}>
-                <img src={coloraturaImg} />
+                <img src={songsData[songIndex].coverURL} />
                 <div>
-                    <span>Coloratura</span>
-                    <span>Coldplay</span>
+                    <span>{songsData[songIndex].title}</span>
+                    <span>{songsData[songIndex].artist}</span>
                 </div>
             </div>
             <div className={style.lyrics} ref={containerRef}>

@@ -15,6 +15,7 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
     const [progress, setProgress] = useState(audio.current.currentTime / audio.current.duration)
     const isSeeking = useRef(false)
     const controllerSeek = useRef<HTMLDivElement>(null)
+    const REAL_DURATION_NO_NAN = isNaN(audio.current.duration) ? 0 : audio.current.duration
 
     const gridTemplate = `${progress * 100}% ${100 - progress * 100}%`
 
@@ -35,7 +36,8 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
 
         function seekUpdate() {
             if (isSeeking.current) return
-            setProgress(audio.current.currentTime / audio.current.duration)
+            const newProgress = audio.current.currentTime / audio.current.duration
+            setProgress(isNaN(newProgress) ? 0 : newProgress)
         }
 
         function startDrag(e: MouseEvent | TouchEvent): void {
@@ -111,8 +113,8 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
                     <Seekbar isPlaying={isPlaying} />
                 </div>
                 <div className={style.progressTime}>
-                    <p>{formatTime(Math.floor(progress * audio.current.duration))}</p>
-                    <p>{formatTime(Math.floor(audio.current.duration))}</p>
+                    <p>{formatTime(Math.floor(progress * REAL_DURATION_NO_NAN))}</p>
+                    <p>{formatTime(Math.floor(REAL_DURATION_NO_NAN))}</p>
                 </div>
             </div>
         </div>

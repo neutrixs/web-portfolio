@@ -1,3 +1,8 @@
+import clancy from '../../../img/clancy.png'
+import mots from '../../../img/coloratura.png'
+import oldies from '../../../audio/Oldies Station.ogg'
+import coloratura from '../../../audio/coloratura.ogg'
+
 export interface WordData {
     word: string
     time: number
@@ -14,7 +19,526 @@ export interface PauseData {
     time: number
 }
 
-const transcriptData: (LineData | PauseData)[] = [
+interface songData {
+    title: string
+    artist: string
+    lyrics: (LineData | PauseData)[]
+    coverURL: string
+    audioURL: string
+}
+
+const oldiesData: (LineData | PauseData)[] = [
+    { type: 'pause', time: 0 },
+    {
+        type: 'line',
+        time: 9.859312,
+        words: [
+            { word: 'Only', time: 9.859312 },
+            { word: 'consistency', time: 10.428583 },
+            { word: 'in', time: 12.284583 },
+            { word: 'your', time: 12.526291 },
+            { word: 'periphery', time: 12.849437 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 13.984375,
+        words: [
+            { word: 'Is', time: 13.984375 },
+            { word: 'fear', time: 14.307125 },
+            { word: 'and', time: 15.278437 },
+            { word: 'the', time: 15.4395 },
+            { word: 'bridge', time: 15.560645 },
+            { word: 'of', time: 15.88302 },
+            { word: 'your', time: 16.163166 },
+            { word: 'nose', time: 16.445708 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 19.515041,
+        words: [
+            { word: 'And', time: 19.515041 },
+            { word: 'as', time: 19.636395 },
+            { word: 'you', time: 19.918687 },
+            { word: 'move', time: 20.24102 },
+            { word: 'about,', time: 20.524229 },
+            { word: 'you', time: 21.733916 },
+            { word: 'learn', time: 22.057291 },
+            { word: 'to', time: 22.301875 },
+            { word: 'tune', time: 22.544187 },
+            { word: 'them', time: 22.826791 },
+            { word: 'out', time: 22.988583 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 23.513562,
+        words: [
+            { word: 'But', time: 23.513562 },
+            { word: 'they', time: 23.67752 },
+            { word: 'say', time: 23.838937 },
+            { word: 'they', time: 24.44502 },
+            { word: 'continue', time: 24.6875 },
+            { word: 'to', time: 25.572708 },
+            { word: 'grow', time: 25.855 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 28.567375,
+        words: [
+            { word: 'Fear', time: 28.567375 },
+            { word: 'of', time: 29.132854 },
+            { word: 'the', time: 29.415375 },
+            { word: 'past', time: 29.736125 },
+            { word: 'and', time: 30.303937 },
+            { word: 'relative', time: 30.989312 },
+            { word: 'pain', time: 32.16002 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 33.290041,
+        words: [
+            { word: "Future's", time: 33.290041 },
+            { word: "comin'", time: 33.896729 },
+            { word: 'fast,', time: 34.500333 },
+            { word: "you've", time: 35.106104 },
+            { word: 'got', time: 35.387937 },
+            { word: "nothin'", time: 35.671125 },
+            { word: 'in', time: 36.277916 },
+            { word: 'the', time: 36.600458 },
+            { word: 'tank', time: 36.887187 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 38.622916,
+        words: [
+            { word: 'In', time: 38.622916 },
+            { word: 'a', time: 38.784812 },
+            { word: 'season', time: 39.028104 },
+            { word: 'of', time: 39.471958 },
+            { word: 'purging', time: 40.361083 },
+            { word: 'things', time: 40.966833 },
+            { word: 'you', time: 41.289437 },
+            { word: 'used', time: 41.531395 },
+            { word: 'to', time: 41.860187 },
+            { word: 'love', time: 42.02125 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 43.714,
+        words: [
+            { word: 'Everything', time: 43.714 },
+            { word: 'must', time: 44.601354 },
+            { word: 'go', time: 45.04475 },
+        ],
+    },
+    { type: 'pause', time: 46.339291 },
+    {
+        type: 'line',
+        time: 49.969937,
+        words: [
+            { word: 'Make', time: 49.969937 },
+            { word: 'an', time: 50.251958 },
+            { word: 'oath,', time: 50.372937 },
+            { word: 'then', time: 50.939875 },
+            { word: 'make', time: 51.101291 },
+            { word: 'mistakes', time: 51.423958 },
+        ],
+    },
+    { type: 'pause', time: 52.309333 },
+    {
+        type: 'line',
+        time: 54.73625,
+        words: [
+            { word: 'Start', time: 54.73625 },
+            { word: 'a', time: 55.018791 },
+            { word: 'streak', time: 55.18252 },
+            { word: "you're", time: 55.747104 },
+            { word: 'bound', time: 55.908562 },
+            { word: 'to', time: 56.190895 },
+            { word: 'break', time: 56.352854 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 56.916083,
+        words: [
+            { word: 'When', time: 56.916083 },
+            { word: 'darkness', time: 57.077666 },
+            { word: 'rolls', time: 58.25275 },
+            { word: 'on', time: 58.89825 },
+            { word: 'you', time: 59.42227 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 61.803937,
+        words: [
+            { word: 'Push', time: 61.803937 },
+            { word: 'on', time: 62.045895 },
+            { word: 'through', time: 62.974687 },
+        ],
+    },
+    { type: 'pause', time: 64.186895 },
+    {
+        type: 'line',
+        time: 66.569895,
+        words: [
+            { word: 'Push', time: 66.569895 },
+            { word: 'on', time: 66.852854 },
+            { word: 'through', time: 67.780979 },
+        ],
+    },
+    { type: 'pause', time: 68.958312 },
+    {
+        type: 'line',
+        time: 74.500145,
+        words: [
+            { word: 'Then', time: 74.500145 },
+            { word: 'before', time: 74.74577 },
+            { word: 'you', time: 75.27052 },
+            { word: 'know,', time: 75.5525 },
+            { word: 'you', time: 76.358604 },
+            { word: 'lose', time: 76.681 },
+            { word: 'some', time: 76.924125 },
+            { word: 'people', time: 77.246895 },
+            { word: 'close', time: 77.772645 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 78.462833,
+        words: [
+            { word: 'Forcing', time: 78.462833 },
+            { word: 'you', time: 79.029479 },
+            { word: 'to', time: 79.354541 },
+            { word: 'manage', time: 79.637604 },
+            { word: 'your', time: 80.24775 },
+            { word: 'pace', time: 80.57025 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 83.433625,
+        words: [
+            { word: 'Found', time: 83.433625 },
+            { word: 'your', time: 83.758604 },
+            { word: 'capacity', time: 84.0415 },
+            { word: 'for', time: 85.854312 },
+            { word: 'love', time: 86.177125 },
+            { word: 'and', time: 86.423687 },
+            { word: 'tragedy', time: 86.747125 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 87.676812,
+        words: [
+            { word: 'Embracing', time: 87.676812 },
+            { word: 'how', time: 88.809062 },
+            { word: 'things', time: 89.132187 },
+            { word: 'always', time: 89.414312 },
+            { word: 'change', time: 90.26275 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 92.72775,
+        words: [
+            { word: "You've", time: 92.72775 },
+            { word: 'had', time: 93.292645 },
+            { word: 'your', time: 93.575062 },
+            { word: 'turns', time: 93.857041 },
+            { word: 'with', time: 94.46002 },
+            { word: '(relative', time: 95.106062 },
+            { word: 'pain)', time: 96.238395 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 97.455708,
+        words: [
+            { word: 'Little', time: 97.455708 },
+            { word: 'less', time: 98.061041 },
+            { word: 'concerned', time: 98.303125 },
+            { word: 'when', time: 99.229979 },
+            { word: "there's", time: 99.512583 },
+            { word: "(nothin'", time: 99.79527 },
+            { word: 'in', time: 100.442104 },
+            { word: 'the', time: 100.72452 },
+            { word: 'tank)', time: 101.047479 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 102.747708,
+        words: [
+            { word: 'In', time: 102.747708 },
+            { word: 'a', time: 102.949791 },
+            { word: 'season', time: 103.189729 },
+            { word: 'of', time: 103.714333 },
+            { word: 'lessons', time: 104.561604 },
+            { word: 'learned', time: 105.127625 },
+            { word: 'in', time: 105.41027 },
+            { word: 'giving', time: 105.692875 },
+            { word: 'up', time: 106.13877 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 106.784562,
+        words: [
+            { word: 'You', time: 106.784562 },
+            { word: 'learn', time: 106.945645 },
+            { word: 'what', time: 107.510562 },
+            { word: 'you', time: 107.795916 },
+            { word: 'can', time: 108.078375 },
+            { word: 'and', time: 108.406041 },
+            { word: "can't", time: 108.688708 },
+            { word: 'take', time: 109.212708 },
+        ],
+    },
+    { type: 'pause', time: 110.470125 },
+    {
+        type: 'line',
+        time: 114.108541,
+        words: [
+            { word: 'Add', time: 114.108541 },
+            { word: 'some', time: 114.391229 },
+            { word: 'years,', time: 114.552604 },
+            { word: 'build', time: 115.27952 },
+            { word: 'some', time: 115.56202 },
+            { word: 'trust', time: 115.884562 },
+        ],
+    },
+    { type: 'pause', time: 116.45075 },
+    {
+        type: 'line',
+        time: 118.674041,
+        words: [
+            { word: 'You', time: 118.674041 },
+            { word: 'start', time: 118.838083 },
+            { word: 'to', time: 119.160854 },
+            { word: 'feel', time: 119.286 },
+            { word: 'your', time: 119.891395 },
+            { word: 'eyes', time: 120.052979 },
+            { word: 'adjust', time: 120.376541 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 121.062854,
+        words: [
+            { word: 'When', time: 121.062854 },
+            { word: 'darkness', time: 121.266604 },
+            { word: 'rolls', time: 122.39652 },
+            { word: 'on', time: 122.959333 },
+            { word: 'you', time: 123.565041 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 126.031458,
+        words: [
+            { word: 'Push', time: 126.031458 },
+            { word: 'on', time: 126.273479 },
+            { word: 'through', time: 127.120083 },
+        ],
+    },
+    { type: 'pause', time: 128.370291 },
+    {
+        type: 'line',
+        time: 130.755666,
+        words: [
+            { word: 'Push', time: 130.755666 },
+            { word: 'on', time: 131.042854 },
+            { word: 'through', time: 131.928437 },
+        ],
+    },
+    { type: 'pause', time: 133.100291 },
+    {
+        type: 'line',
+        time: 138.63652,
+        words: [
+            { word: 'You', time: 138.63652 },
+            { word: "don't", time: 138.757208 },
+            { word: 'quite', time: 139.043 },
+            { word: 'mind', time: 139.28702 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 141.099895,
+        words: [
+            { word: 'You', time: 141.099895 },
+            { word: "don't", time: 141.260916 },
+            { word: 'quite', time: 141.503145 },
+            { word: 'mind', time: 141.705145 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 144.654812,
+        words: [
+            { word: 'You', time: 144.654812 },
+            { word: "don't", time: 144.816166 },
+            { word: 'quite', time: 145.09877 },
+            { word: 'mind', time: 145.386979 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 147.646708,
+        words: [
+            { word: 'You', time: 147.646708 },
+            { word: "don't", time: 148.252375 },
+            { word: 'quite', time: 148.8575 },
+            { word: 'mind', time: 149.462979 },
+            { word: 'how', time: 150.024708 },
+            { word: 'long', time: 150.629916 },
+            { word: 'red', time: 151.234833 },
+            { word: 'lights', time: 151.840958 },
+            { word: 'are', time: 152.406729 },
+            { word: "takin'", time: 152.973416 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 154.46827,
+        words: [
+            { word: 'Push', time: 154.46827 },
+            { word: 'on', time: 154.79127 },
+            { word: 'through', time: 155.677979 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 157.211458,
+        words: [
+            { word: 'Your', time: 157.211458 },
+            { word: 'favorite', time: 157.736062 },
+            { word: 'song', time: 158.94875 },
+            { word: 'was', time: 159.559833 },
+            { word: 'on', time: 160.122958 },
+            { word: 'the', time: 160.7285 },
+            { word: 'oldies', time: 161.333708 },
+            { word: 'station', time: 162.464333 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 163.964895,
+        words: [
+            { word: 'Push', time: 163.964895 },
+            { word: 'on', time: 164.206979 },
+            { word: 'through', time: 165.1335 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 166.629062,
+        words: [
+            { word: 'You', time: 166.629062 },
+            { word: 'have', time: 167.234312 },
+            { word: 'it', time: 167.886812 },
+            { word: 'down,', time: 168.452104 },
+            { word: 'that', time: 169.057229 },
+            { word: 'old', time: 169.62125 },
+            { word: 'fight', time: 170.227291 },
+            { word: 'for', time: 170.833229 },
+            { word: 'survival', time: 171.440062 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 173.500166,
+        words: [
+            { word: 'Push', time: 173.500166 },
+            { word: 'on', time: 173.78075 },
+            { word: 'through', time: 174.669375 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 176.163291,
+        words: [
+            { word: "You're", time: 176.163291 },
+            { word: 'in', time: 176.770666 },
+            { word: 'the', time: 177.376541 },
+            { word: 'crowd', time: 177.944333 },
+            { word: 'at', time: 178.547479 },
+            { word: 'her', time: 179.112937 },
+            { word: 'first', time: 179.758333 },
+            { word: 'dance', time: 180.323 },
+            { word: 'recital', time: 180.928479 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 182.905979,
+        words: [
+            { word: 'Push', time: 182.905979 },
+            { word: 'on', time: 183.228812 },
+            { word: 'through', time: 184.118312 },
+        ],
+    },
+    { type: 'pause', time: 185.370708 },
+    {
+        type: 'line',
+        time: 187.791916,
+        words: [
+            { word: 'Make', time: 187.791916 },
+            { word: 'an', time: 188.074541 },
+            { word: 'oath,', time: 188.235687 },
+            { word: 'then', time: 188.760083 },
+            { word: 'make', time: 188.961937 },
+            { word: 'mistakes', time: 189.244541 },
+        ],
+    },
+    { type: 'pause', time: 190.135041 },
+    {
+        type: 'line',
+        time: 192.520312,
+        words: [
+            { word: 'Start', time: 192.520312 },
+            { word: 'a', time: 192.802708 },
+            { word: 'streak', time: 192.964333 },
+            { word: "you're", time: 193.52602 },
+            { word: 'bound', time: 193.728125 },
+            { word: 'to', time: 194.011291 },
+            { word: 'break', time: 194.29427 },
+        ],
+    },
+    { type: 'pause', time: 194.899604 },
+    {
+        type: 'line',
+        time: 197.121666,
+        words: [
+            { word: 'When', time: 197.121666 },
+            { word: 'darkness', time: 197.283125 },
+            { word: 'rolls', time: 198.410187 },
+            { word: 'on', time: 199.014875 },
+            { word: 'you', time: 199.619666 },
+        ],
+    },
+    {
+        type: 'line',
+        time: 202.004229,
+        words: [
+            { word: 'Push', time: 202.004229 },
+            { word: 'on', time: 202.283812 },
+            { word: 'through', time: 203.211041 },
+        ],
+    },
+    { type: 'pause', time: 204.4215 },
+]
+
+const coloraturaData: (LineData | PauseData)[] = [
     { type: 'pause', time: 0 },
     { type: 'line', time: 106.878082, words: [{ word: 'Coloratura', time: 106.878082 }] },
     {
@@ -549,4 +1073,21 @@ const transcriptData: (LineData | PauseData)[] = [
     { type: 'pause', time: 540.317228 },
 ]
 
-export default transcriptData
+const songsData: songData[] = [
+    {
+        title: 'Oldies Station',
+        artist: 'twenty one pilots',
+        lyrics: oldiesData,
+        coverURL: clancy,
+        audioURL: oldies,
+    },
+    {
+        title: 'Coloratura',
+        artist: 'Coldplay',
+        lyrics: coloraturaData,
+        coverURL: mots,
+        audioURL: coloratura,
+    },
+]
+
+export default songsData
