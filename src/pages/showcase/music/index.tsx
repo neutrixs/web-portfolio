@@ -140,6 +140,10 @@ export default function Music({ audio }: props) {
         return lines
     }
 
+    function skip() {
+        setSongIndex((prev) => (prev == songsData.length - 1 ? 0 : prev + 1))
+    }
+
     return (
         <div className={style.container}>
             <div className={style.info}>
@@ -152,7 +156,7 @@ export default function Music({ audio }: props) {
             <div className={style.lyrics} ref={containerRef}>
                 {genLines()}
             </div>
-            <Controller {...{ audio, ctimeOverride, ctimeOverriden }} />
+            <Controller {...{ audio, ctimeOverride, ctimeOverriden, skip }} />
         </div>
     )
 }

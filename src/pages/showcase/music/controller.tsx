@@ -1,16 +1,18 @@
-import React, { memo, useEffect, useState, useRef, ReactNode } from 'react'
+import React, { memo, useEffect, useState, useRef } from 'react'
 import Seekbar from './seekbar'
 import style from './music.module.scss'
 import pauseButton from '../../../img/pause.svg'
 import playButton from '../../../img/play.svg'
+import skipButton from '../../../img/skip.svg'
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
     ctimeOverriden: React.MutableRefObject<boolean>
     ctimeOverride: React.MutableRefObject<number>
+    skip: () => void
 }
 
-const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverriden }: props) {
+const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverriden, skip }: props) {
     const [isPlaying, setIsPlaying] = useState(!audio.current.paused)
     const [progress, setProgress] = useState(audio.current.currentTime / audio.current.duration)
     const isSeeking = useRef(false)
@@ -100,10 +102,13 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
 
     return (
         <div className={style.controller}>
-            <img
-                src={isPlaying ? pauseButton : playButton}
-                onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
-            />
+            <div className={style.controllerLeftSide}>
+                <img
+                    src={isPlaying ? pauseButton : playButton}
+                    onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
+                />
+                <img src={skipButton} onClick={skip} />
+            </div>
             <div className={style.controllerRightSide}>
                 <div
                     className={style.seek}
