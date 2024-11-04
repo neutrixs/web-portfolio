@@ -1,19 +1,24 @@
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react'
 import style from './music.module.scss'
-import { bezier, EMToPX } from '../../../scripts/util'
+import { bezier, EMToPX, Point } from '../../../scripts/util'
 
 const SVG_WIDTH_EM = 2
 const SVG_WIDTH_ACTUAL_EM = 4
 const PATH_LENGTH = 16.09857
-const PASSIVE_PATH_LENGTH = 14.4572
+const PASSIVE_PATH_LENGTH = 14.8572
 const LONG_TERM_ANIMATION_INTERVAL_MS = 50
 const WAVES_ANIMATION_DECREMENT = 0.02
 const SEEKER_DOT_WIDTH_EM = 1.5
+const BEZIER_CURVES: Point[] = [
+    { x: 0.16, y: 0.86 },
+    { x: 0.28, y: 0.97 },
+]
 
 interface SineProps {
     isPlaying: boolean
     isFirst: boolean
     percentActive: number
+    animationMultiplier: number
 }
 
 interface SeekbarProps {
@@ -49,7 +54,12 @@ function seekerDotRaiser(seekerElement: HTMLDivElement, waveTranslation: number)
     return height
 }
 
-function generateSineWaves(amount: number, translateWavesEM: number, isPlaying: boolean) {
+function generateSineWaves(
+    amount: number,
+    translateWavesEM: number,
+    isPlaying: boolean,
+    animationMultiplier: number,
+) {
     const elements: ReactNode[] = []
     for (let i = 0; i < amount; i++) {
         elements.push(
@@ -58,16 +68,17 @@ function generateSineWaves(amount: number, translateWavesEM: number, isPlaying: 
                 isFirst={i == 0}
                 percentActive={i == 0 ? -(translateWavesEM + SVG_WIDTH_EM) / SVG_WIDTH_EM : 0}
                 isPlaying={isPlaying}
+                animationMultiplier={i == 0 ? animationMultiplier : 0}
             />,
         )
     }
     return elements
 }
 
-const Sine = memo(({ isFirst, isPlaying, percentActive }: SineProps) => {
-    const percentage = isFirst
-        ? 0.4 * (1 - percentActive) * (isPlaying ? PATH_LENGTH : PASSIVE_PATH_LENGTH)
-        : 0
+const Sine = memo(({ isFirst, isPlaying, percentActive, animationMultiplier }: SineProps) => {
+    const chosenPathLength =
+        PASSIVE_PATH_LENGTH + (PATH_LENGTH - PASSIVE_PATH_LENGTH) * animationMultiplier
+    const percentage = 0.4 * (1 - percentActive) * chosenPathLength
     const active = `M 16.9572 0
         16.9572 0, 16.4893 0.25615, 16 0.5
         C 15.5107 0.25615, 15.0420 0, 14.5 0
@@ -121,7 +132,7 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
     // because the viewbox cuts vertically, and not at an angle
     const [translateWavesEM, setTranslateWavesEM] = useState(-SVG_WIDTH_EM)
     const [raiseSeekerDotEM, setRaiseSeekerDotEM] = useState(0)
-    const [raiserMultiplier, setRaiserMultiplier] = useState(0)
+    const [animationMultiplier, setAnimationMultiplier] = useState(0)
     // some logic (not rendering logic) requires its property
     const isPlayingRef = useRef(isPlaying)
     const translateWavesEMRef = useRef(translateWavesEM)
@@ -155,9 +166,9 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
 
         function animate() {
             const t = (+new Date() - startTime) / duration
-            const multiplier = bezier(t, { x: 0.16, y: 0.86 }, { x: 0.28, y: 0.97 })
+            const multiplier = bezier(t, BEZIER_CURVES[0], BEZIER_CURVES[1])
 
-            setRaiserMultiplier(isPlaying ? multiplier.y : 1 - multiplier.y)
+            setAnimationMultiplier(isPlaying ? multiplier.y : 1 - multiplier.y)
 
             if (+new Date() - startTime < duration && isPlaying == isPlayingRef.current) {
                 requestAnimationFrame(animate)
@@ -175,14 +186,19 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
                         className={style.waves}
                         style={{ transform: `translateX(${translateWavesEM}em)` }}
                     >
-                        {generateSineWaves(repeatingWavesAmount, translateWavesEM, isPlaying)}
+                        {generateSineWaves(
+                            repeatingWavesAmount,
+                            translateWavesEM,
+                            isPlaying,
+                            animationMultiplier,
+                        )}
                     </div>
                 </div>
                 <div
                     className={style.dot}
                     style={{
                         transform: `translate(-50%, calc(-50% + ${
-                            raiseSeekerDotEM * raiserMultiplier
+                            raiseSeekerDotEM * animationMultiplier
                         }em))`,
                         width: `${SEEKER_DOT_WIDTH_EM}em`,
                     }}
