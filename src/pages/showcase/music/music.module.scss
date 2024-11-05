@@ -59,6 +59,7 @@
     & span {
         opacity: 0.5;
         transition: transform 0.3s cubic-bezier(0.09, 0.66, 0.19, 1.74), opacity 0.1s linear;
+        margin-right: 0.23em;
         transform: translate(0);
         display: inline-block;
         cursor: pointer;
