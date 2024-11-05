@@ -1,4 +1,12 @@
-import React, { memo, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+    memo,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react'
 import Controller from './controller'
 import songsData, { LineData, PauseData, WordData } from './lyrics'
 import style from './music.module.scss'
@@ -96,6 +104,10 @@ const Music = memo(({ audio }: props) => {
         return () => clearInterval(interval)
     }, [])
 
+    const skip = useCallback(() => {
+        setSongIndex((prev) => (prev == songsData.length - 1 ? 0 : prev + 1))
+    }, [])
+
     function stateUpdater() {
         const transcriptData = songsData[songIndexRef.current].lyrics
         const time = ctimeOverriden.current ? ctimeOverride.current : audio.current.currentTime
@@ -123,10 +135,6 @@ const Music = memo(({ audio }: props) => {
                 containerRef={containerRef}
             />
         ))
-    }
-
-    function skip() {
-        setSongIndex((prev) => (prev == songsData.length - 1 ? 0 : prev + 1))
     }
 
     return (
