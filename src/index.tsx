@@ -13,7 +13,7 @@ function Main() {
     )
 }
 
-async function run() {
+;(async function run() {
     const rootElement = document.createElement('div')
     const root = createRoot(rootElement)
     rootElement.classList.add('app')
@@ -27,6 +27,4 @@ async function run() {
     loading?.parentElement?.removeChild(loading)
 
     document.body.insertBefore(rootElement, document.body.firstChild)
-}
-
-run()
+})()

@@ -31,7 +31,7 @@ export default function Introduction({ height, inView }: props) {
             <div style={{ position: 'relative' }}>
                 <div className={style.zigzag} />
                 <div className={style.pic + ' ' + (picActive ? style.show : '')}>
-                    <img src={myself} />
+                    <img alt={'picture of Steven'} src={myself} />
                 </div>
                 <div className={style.picShadow + ' ' + (picActive ? style.show : '')} />
             </div>

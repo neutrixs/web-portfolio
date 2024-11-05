@@ -86,7 +86,7 @@ export default function MainPage() {
             <div className={styles.scrollAccessibility}>
                 {currentSlide != 0 ? (
                     <div onClick={() => scroll(-1)} className={styles.arrow}>
-                        <img src={arrow} />
+                        <img alt={'go to the previous slide'} src={arrow} />
                     </div>
                 ) : (
                     <div />
@@ -94,7 +94,7 @@ export default function MainPage() {
 
                 {currentSlide < slides.length - 1 ? (
                     <div onClick={() => scroll(1)} className={styles.arrow}>
-                        <img src={arrow} />
+                        <img alt={'go to the next slide'} src={arrow} />
                     </div>
                 ) : (
                     <div />

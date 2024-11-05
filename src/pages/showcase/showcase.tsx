@@ -69,7 +69,7 @@ export default function Showcase({ height, inView }: props) {
                             className={style.showcaseElement}
                             onClick={() => openSubpanel(subpanelMenus.gallery)}
                         >
-                            <img src={galleryIcon} />
+                            <img alt={'gallery icon'} src={galleryIcon} />
                             <span>Photo Gallery</span>
                         </div>
                     </div>
@@ -78,7 +78,7 @@ export default function Showcase({ height, inView }: props) {
                             className={style.showcaseElement}
                             onClick={() => openSubpanel(subpanelMenus.music)}
                         >
-                            <img src={musicIcon} />
+                            <img alt={'music icon'} src={musicIcon} />
                             <span>Favorite Song</span>
                         </div>
                     </div>

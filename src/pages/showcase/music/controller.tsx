@@ -105,9 +105,10 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
             <div className={style.controllerLeftSide}>
                 <img
                     src={isPlaying ? pauseButton : playButton}
+                    alt={'play/pause button'}
                     onClick={() => (isPlaying ? audio.current.pause() : audio.current.play())}
                 />
-                <img src={skipButton} onClick={skip} />
+                <img alt={'skip button'} src={skipButton} onClick={skip} />
             </div>
             <div className={style.controllerRightSide}>
                 <div

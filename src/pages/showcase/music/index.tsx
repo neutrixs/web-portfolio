@@ -132,7 +132,10 @@ const Music = memo(({ audio }: props) => {
     return (
         <div className={style.container}>
             <div className={style.info}>
-                <img src={songsData[songIndex].coverURL} />
+                <img
+                    alt={songsData[songIndex].title + ' album cover'}
+                    src={songsData[songIndex].coverURL}
+                />
                 <div>
                     <span>{songsData[songIndex].title}</span>
                     <span>{songsData[songIndex].artist}</span>
