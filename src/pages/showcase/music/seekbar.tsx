@@ -1,6 +1,7 @@
-import React, { memo, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { memo, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import style from './music.module.scss'
-import { bezier, EMToPX, Point } from '../../../scripts/util'
+import { EMToPX, Point } from '../../../scripts/util'
+import BezierEasing from 'bezier-easing'
 
 const SVG_WIDTH_EM = 2
 const SVG_WIDTH_ACTUAL_EM = 4
@@ -33,8 +34,8 @@ function wavesAmountCheck(seekerElement: HTMLDivElement) {
     return Math.ceil(width / singleWaveWidth / factor) + 1
 }
 
-function wavesTranslator(prev: number) {
-    let newPosition = prev - WAVES_ANIMATION_DECREMENT
+function wavesTranslator(prev: number, animationMultiplier: number) {
+    let newPosition = prev - WAVES_ANIMATION_DECREMENT * animationMultiplier
     // will be changed just slightly before -width to prevent visual artifacts
     if (newPosition < -1.8 * SVG_WIDTH_EM) newPosition += SVG_WIDTH_EM
     return newPosition
@@ -132,13 +133,15 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
     const [translateWavesEM, setTranslateWavesEM] = useState(-SVG_WIDTH_EM)
     const [raiseSeekerDotEM, setRaiseSeekerDotEM] = useState(0)
     const [animationMultiplier, setAnimationMultiplier] = useState(0)
+    const animationMultiplierRef = useRef(0)
     // some logic (not rendering logic) requires its property
     const isPlayingRef = useRef(isPlaying)
     const translateWavesEMRef = useRef(translateWavesEM)
-    useEffect(() => {
+    useLayoutEffect(() => {
         isPlayingRef.current = isPlaying
         translateWavesEMRef.current = translateWavesEM
-    }, [isPlaying, translateWavesEM])
+        animationMultiplierRef.current = animationMultiplier
+    }, [isPlaying, translateWavesEM, animationMultiplier])
 
     useEffect(() => {
         const observer = new ResizeObserver(() =>
@@ -147,8 +150,10 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
         observer.observe(seekerElementRef.current)
 
         const workerInterval = setInterval(() => {
-            if (!isPlayingRef.current) return
-            const newTranslatePos = wavesTranslator(translateWavesEMRef.current)
+            const newTranslatePos = wavesTranslator(
+                translateWavesEMRef.current,
+                animationMultiplierRef.current,
+            )
             setTranslateWavesEM(newTranslatePos)
             setRaiseSeekerDotEM(seekerDotRaiser(seekerElementRef.current, newTranslatePos))
         }, LONG_TERM_ANIMATION_INTERVAL_MS)
@@ -162,12 +167,18 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
     useEffect(() => {
         const duration = 1000
         const startTime = +new Date()
+        const easing = BezierEasing(
+            BEZIER_CURVES[0].x,
+            BEZIER_CURVES[0].y,
+            BEZIER_CURVES[1].x,
+            BEZIER_CURVES[1].y,
+        )
 
         function animate() {
             const t = (+new Date() - startTime) / duration
-            const multiplier = bezier(t, BEZIER_CURVES[0], BEZIER_CURVES[1])
+            const multiplier = easing(t)
 
-            setAnimationMultiplier(isPlaying ? multiplier.y : 1 - multiplier.y)
+            setAnimationMultiplier(isPlaying ? multiplier : 1 - multiplier)
 
             if (+new Date() - startTime < duration && isPlaying == isPlayingRef.current) {
                 requestAnimationFrame(animate)
