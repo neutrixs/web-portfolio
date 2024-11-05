@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Introduction from './introduction'
 import About from './about'
 import Showcase from '../showcase/showcase'

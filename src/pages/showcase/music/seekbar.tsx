@@ -50,8 +50,7 @@ function seekerDotRaiser(seekerElement: HTMLDivElement, waveTranslation: number)
     const xPI = xRelative * 2 * Math.PI
 
     // 0.1 because we don't wanna go crazy
-    const height = Math.sin(xPI) * 0.1
-    return height
+    return Math.sin(xPI) * 0.1
 }
 
 function generateSineWaves(

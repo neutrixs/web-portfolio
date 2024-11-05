@@ -51,18 +51,18 @@
                     audio.currentTime = Math.max(data[lineIndex].time - 10, 0)
                     audio.play()
 
-                    if (lineIndex == 0 && data[lineIndex].type == 'pause') {
+                    if (lineIndex === 0 && data[lineIndex].type === 'pause') {
                         lineIndex += 1
                         wordsIndex = 0
                     }
 
                     running = true
                 } else {
-                    if (wordsIndex == 0) {
+                    if (wordsIndex === 0) {
                         data[lineIndex].time = audio.currentTime
                     }
 
-                    if (data[lineIndex].type == 'pause') {
+                    if (data[lineIndex].type === 'pause') {
                         wordsIndex = 0
                         lineIndex += 1
                     } else {
@@ -77,17 +77,19 @@
                 }
 
                 let currentWord =
-                    data[lineIndex].type == 'pause' ? '...' : data[lineIndex].words[wordsIndex].word
+                    data[lineIndex].type === 'pause'
+                        ? '...'
+                        : data[lineIndex].words[wordsIndex].word
                 let lineIsFinished =
-                    data[lineIndex].type == 'pause'
+                    data[lineIndex].type === 'pause'
                         ? true
-                        : wordsIndex == data[lineIndex].words.length - 1
+                        : wordsIndex === data[lineIndex].words.length - 1
                 let nextLine = !lineIsFinished ? lineIndex : lineIndex + 1
 
                 let nextWord = ''
                 if (data[nextLine]) {
                     nextWord =
-                        data[nextLine].type == 'pause'
+                        data[nextLine].type === 'pause'
                             ? '...'
                             : data[nextLine].words[lineIsFinished ? 0 : wordsIndex + 1].word
                 }
@@ -106,7 +108,7 @@
                     let currentword = ''
                     data.forEach((line) => {
                         if (line.time > audio.currentTime) return
-                        if (line.type == 'pause') {
+                        if (line.type === 'pause') {
                             currentword = '...'
                         } else {
                             line.words.forEach((word) => {

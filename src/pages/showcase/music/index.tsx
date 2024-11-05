@@ -18,7 +18,7 @@ interface LineProps {
 }
 
 const Line = memo(function Line({ line, active, activeWord, audio, containerRef }: LineProps) {
-    let words: ReactNode = []
+    let words: ReactNode
     const lineRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {

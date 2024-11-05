@@ -98,7 +98,7 @@ const config = (dev, name) => ({
 
 module.exports = function (env, argv) {
     console.log(argv)
-    const dev = argv.mode == 'development'
+    const dev = argv.mode === 'development'
     const name = dev ? '[name]' : '[contenthash]'
 
     return config(dev, name)
