@@ -14,6 +14,14 @@ const BEZIER_CURVES: Point[] = [
     { x: 0.16, y: 0.86 },
     { x: 0.28, y: 0.97 },
 ]
+const HALF_SINE_CURVES: Point[] = [
+    { x: 0.5, y: 0.75 },
+    { x: 1, y: 1 },
+    { x: Math.PI / 2, y: 1 },
+    { x: Math.PI - 1, y: 1 },
+    { x: Math.PI - 0.5, y: 0.75 },
+    { x: Math.PI, y: 0.5 },
+]
 
 interface SineProps {
     isPlaying: boolean
@@ -52,6 +60,23 @@ function seekerDotRaiser(seekerElement: HTMLDivElement, waveTranslation: number)
 
     // 0.1 because we don't wanna go crazy
     return Math.sin(xPI) * 0.1
+}
+
+function generateSineWavePath(amount: number) {
+    const length = 2 * Math.PI * amount
+    let path = `M ${length} 0.5`
+    for (let i = 0; i < amount * 2; i++) {
+        const even = !(i % 2)
+        for (let j = 0; j < HALF_SINE_CURVES.length; j++) {
+            let data = !(j % 3) ? 'C' : ''
+            const curve = HALF_SINE_CURVES[j]
+            data += `${length - curve.x - i * Math.PI} ${even ? 1 - curve.y : curve.y}`
+            if ((j + 1) % 3) data += ','
+            path += data
+        }
+    }
+
+    return path
 }
 
 function generateSineWaves(
@@ -104,12 +129,7 @@ const Sine = memo(({ isFirst, isPlaying, percentActive, animationMultiplier }: S
         C 3.5107 0.5, 3.0428 0.5, 2.5 0.5`
 
     return (
-        <svg
-            width="1000"
-            height="105"
-            viewBox="4 0 12 1"
-            style={{ width: `${SVG_WIDTH_ACTUAL_EM}em` }}
-        >
+        <svg viewBox="4 0 12 1" style={{ width: `${SVG_WIDTH_ACTUAL_EM}em` }}>
             <path
                 d={isPlaying ? active : passive}
                 fill="none"
@@ -157,6 +177,8 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
             setTranslateWavesEM(newTranslatePos)
             setRaiseSeekerDotEM(seekerDotRaiser(seekerElementRef.current, newTranslatePos))
         }, LONG_TERM_ANIMATION_INTERVAL_MS)
+
+        ;(window as any).kontol = generateSineWavePath
 
         return () => {
             observer.disconnect()

@@ -159,6 +159,10 @@
     justify-content: flex-start;
     align-items: center;
 
+    svg {
+        height: 1em;
+    }
+
     svg path {
         transition: d 1s cubic-bezier(0.16, 0.86, 0.28, 0.97);
     }
