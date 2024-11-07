@@ -53,7 +53,7 @@ export default function Showcase({ height, inView }: props) {
                 setSubpanelContent(null)
                 break
             case subpanelMenus.music:
-                setSubpanelTitle('Favorite Song')
+                setSubpanelTitle('Favorite Songs')
                 setSubpanelContent(<Music {...{ audio }} />)
                 break
         }
@@ -79,7 +79,7 @@ export default function Showcase({ height, inView }: props) {
                             onClick={() => openSubpanel(subpanelMenus.music)}
                         >
                             <img alt={'music icon'} src={musicIcon} />
-                            <span>Favorite Song</span>
+                            <span>Favorite Songs</span>
                         </div>
                     </div>
                 </div>
