@@ -136,6 +136,8 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
     const animationMultiplierRef = useRef(0)
     // some logic (not rendering logic) requires its property
     const isPlayingRef = useRef(isPlaying)
+    // prevents workerInterval from calculating stuff when there's literally nothing to do
+    const isAnimationPlaying = useRef(false)
     const translateWavesEMRef = useRef(translateWavesEM)
     useLayoutEffect(() => {
         isPlayingRef.current = isPlaying
@@ -150,6 +152,7 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
         observer.observe(seekerElementRef.current)
 
         const workerInterval = setInterval(() => {
+            if (!isAnimationPlaying.current) return
             const newTranslatePos = wavesTranslator(
                 translateWavesEMRef.current,
                 animationMultiplierRef.current,
@@ -182,8 +185,12 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
 
             if (+new Date() - startTime < duration && isPlaying == isPlayingRef.current) {
                 requestAnimationFrame(animate)
+                return
             }
+            // using the ref because isPlaying won't be up to date by the time the animation has finished
+            if (!isPlayingRef.current) isAnimationPlaying.current = false
         }
+        if (isPlaying) isAnimationPlaying.current = true
 
         animate()
     }, [isPlaying])
