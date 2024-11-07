@@ -12,7 +12,7 @@ const config = (dev, name) => ({
     entry: {
         vendors: ['react', 'react-dom/client', 'react-router-dom'],
         main: {
-            import: './src/index.tsx',
+            import: './src/loader.tsx',
             dependOn: 'vendors',
         },
         css: './src/default.css',
