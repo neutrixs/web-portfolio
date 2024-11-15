@@ -1,6 +1,7 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import songsData from './music/lyrics'
 import Music from './music'
+import Gallery, { getImagesURLs } from './gallery'
 
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
@@ -26,8 +27,13 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelTitle, setSubpanelTitle] = useState('')
     const [subpanelContent, setSubpanelContent] = useState<ReactNode>(null)
     const audio = useRef(new Audio(songsData[0].audioURL))
+    const urls = useRef<string[]>([])
 
     const { setScrollable } = useContext(ScrollableContext)
+
+    useEffect(() => {
+        getImagesURLs().then((u) => (urls.current = u))
+    }, [])
 
     useEffect(() => {
         if (inView) {
@@ -50,7 +56,7 @@ export default function Showcase({ height, inView }: props) {
         switch (id) {
             case subpanelMenus.gallery:
                 setSubpanelTitle('Photo Gallery')
-                setSubpanelContent(null)
+                setSubpanelContent(<Gallery urls={urls} />)
                 break
             case subpanelMenus.music:
                 setSubpanelTitle('Favorite Songs')
@@ -86,7 +92,7 @@ export default function Showcase({ height, inView }: props) {
             </div>
             <div className={style.subPanel + ' ' + (subpanelShow ? style.show : '')}>
                 <div className={style.navigation}>
-                    <img src={backIcon} onClick={() => setSubpanelShow(false)} />
+                    <img alt="back button" src={backIcon} onClick={() => setSubpanelShow(false)} />
                     <span>{subpanelTitle}</span>
                 </div>
                 {subpanelContent}

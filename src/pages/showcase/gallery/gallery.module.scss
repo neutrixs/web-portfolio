@@ -1,0 +1,12 @@
+.container {
+    max-width: 40em;
+    width: 100%;
+    height: calc(100% - 2em);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
