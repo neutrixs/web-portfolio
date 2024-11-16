@@ -4,6 +4,7 @@ import React, {
     useCallback,
     useEffect,
     useLayoutEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react'
@@ -15,6 +16,7 @@ const TIME_TOLERANCE_S = 0.2
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
+    musicState: ReturnType<typeof useMusicRestoreState>
 }
 
 interface LineProps {
@@ -76,17 +78,38 @@ function getIndexAtCurrentTime(data: (PauseData | LineData)[] | WordData[], t: n
     )
 }
 
-const Music = memo(({ audio }: props) => {
+export function useMusicRestoreState() {
+    const [songIndex, setSongIndex] = useState(0)
+    const [initialized, setInitialized] = useState(false)
+    // this way, the object ID will only change if the value(s) actually change
+    return useMemo(
+        () => ({
+            songIndex,
+            setSongIndex,
+            initialized,
+            setInitialized,
+        }),
+        [songIndex, setSongIndex, initialized, setInitialized],
+    )
+}
+
+const Music = memo(({ audio, musicState }: props) => {
+    const { initialized, setInitialized, songIndex, setSongIndex } = musicState
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
-    const [songIndex, setSongIndex] = useState(0)
-    const songIndexRef = useRef(0)
+    const [first, setFirst] = useState(true)
+    const songIndexRef = useRef(songIndex)
     const containerRef = useRef<HTMLDivElement>(null)
 
     const ctimeOverriden = useRef(false)
     const ctimeOverride = useRef(0)
 
     useLayoutEffect(() => {
+        setFirst(false)
+        if (first && initialized) {
+            return
+        }
+
         function play() {
             audio.current.play()
         }
@@ -107,13 +130,14 @@ const Music = memo(({ audio }: props) => {
     }, [songIndex])
 
     useEffect(() => {
+        setInitialized(true)
         const interval = setInterval(stateUpdater, 100)
         return () => clearInterval(interval)
     }, [])
 
     const skip = useCallback(() => {
         setSongIndex((prev) => (prev == songsData.length - 1 ? 0 : prev + 1))
-    }, [])
+    }, [setSongIndex])
 
     function stateUpdater() {
         const transcriptData = songsData[songIndexRef.current].lyrics

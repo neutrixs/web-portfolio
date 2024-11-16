@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import songsData from './music/lyrics'
-import Music from './music'
+import Music, { useMusicRestoreState } from './music'
 import Gallery, { getImagesURLs } from './gallery'
 
 import style from './showcase.module.scss'
@@ -25,7 +25,8 @@ export default function Showcase({ height, inView }: props) {
     const [musicShow, setMusicShow] = useState(false)
     const [subpanelShow, setSubpanelShow] = useState(false)
     const [subpanelTitle, setSubpanelTitle] = useState('')
-    const [subpanelContent, setSubpanelContent] = useState<ReactNode>(null)
+    const [subpanelID, setSubpanelID] = useState(subpanelMenus.gallery)
+    const musicState = useMusicRestoreState()
     const audio = useRef(new Audio(songsData[0].audioURL))
     const urls = useRef<string[]>([])
 
@@ -53,15 +54,28 @@ export default function Showcase({ height, inView }: props) {
 
     function openSubpanel(id: subpanelMenus) {
         setSubpanelShow(true)
+        setSubpanelID(id)
         switch (id) {
             case subpanelMenus.gallery:
                 setSubpanelTitle('Photo Gallery')
-                setSubpanelContent(<Gallery urls={urls} />)
-                break
+                return
             case subpanelMenus.music:
                 setSubpanelTitle('Favorite Songs')
-                setSubpanelContent(<Music {...{ audio }} />)
-                break
+                return
+            default:
+                setSubpanelTitle('')
+                return
+        }
+    }
+
+    function subpanelContent(): ReactNode {
+        switch (subpanelID) {
+            case subpanelMenus.gallery:
+                return <Gallery urls={urls} />
+            case subpanelMenus.music:
+                return <Music {...{ audio, musicState }} />
+            default:
+                return null
         }
     }
 
@@ -95,7 +109,7 @@ export default function Showcase({ height, inView }: props) {
                     <img alt="back button" src={backIcon} onClick={() => setSubpanelShow(false)} />
                     <span>{subpanelTitle}</span>
                 </div>
-                {subpanelContent}
+                {subpanelShow ? subpanelContent() : null}
             </div>
         </div>
     )
