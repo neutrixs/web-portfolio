@@ -152,8 +152,6 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
             setRaiseSeekerDotEM(seekerDotRaiser(seekerElementRef.current, newTranslatePos))
         }, LONG_TERM_ANIMATION_INTERVAL_MS)
 
-        ;(window as any).kontol = generateSineWavePath
-
         return () => {
             observer.disconnect()
             clearInterval(workerInterval)
