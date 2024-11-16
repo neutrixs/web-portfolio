@@ -96,6 +96,13 @@ const Music = memo(({ audio }: props) => {
         audio.current.currentTime = 0
         audio.current.addEventListener('loadedmetadata', play)
 
+        const songData = songsData[songIndex]
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: songData.title,
+            artist: songData.artist,
+            artwork: [{ src: songData.coverURL }],
+        })
+
         return () => audio.current.removeEventListener('loadedmetadata', play)
     }, [songIndex])
 
