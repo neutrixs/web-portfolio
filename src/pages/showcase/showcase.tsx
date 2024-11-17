@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import songsData from './music/lyrics'
 import Music, { useMusicRestoreState } from './music'
-import Gallery, { getImagesURLs } from './gallery'
+import Gallery, { getImagesURLs, useGalleryRestoreState } from './gallery'
 
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
@@ -27,6 +27,7 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelTitle, setSubpanelTitle] = useState('')
     const [subpanelID, setSubpanelID] = useState(subpanelMenus.gallery)
     const musicState = useMusicRestoreState()
+    const galleryState = useGalleryRestoreState()
     const audio = useRef(new Audio(songsData[0].audioURL))
     const urls = useRef<string[]>([])
 
@@ -71,7 +72,7 @@ export default function Showcase({ height, inView }: props) {
     function subpanelContent(): ReactNode {
         switch (subpanelID) {
             case subpanelMenus.gallery:
-                return <Gallery urls={urls} />
+                return <Gallery {...{ urls, galleryState }} />
             case subpanelMenus.music:
                 return <Music {...{ audio, musicState }} />
             default:

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import style from './gallery.module.scss'
 import Layout, { imageMetadata } from './layout'
 import WebPDecoder, { Size } from '../../../scripts/webpdecoder'
@@ -14,6 +14,7 @@ interface nginxIndexing {
 
 interface GalleryProps {
     urls?: React.MutableRefObject<string[]>
+    galleryState: ReturnType<typeof useGalleryRestoreState>
 }
 
 export async function getImagesURLs() {
@@ -30,8 +31,23 @@ async function getMeta(url: string) {
     return image.decoder.decode().getDimension()
 }
 
-export default function Gallery({ urls }: GalleryProps) {
+export function useGalleryRestoreState() {
     const [images, setImages] = useState<imageMetadata[]>([])
+    const [initialized, setInitialized] = useState(false)
+
+    return useMemo(
+        () => ({
+            images,
+            setImages,
+            initialized,
+            setInitialized,
+        }),
+        [images, setImages, initialized, setInitialized],
+    )
+}
+
+export default function Gallery({ urls, galleryState }: GalleryProps) {
+    const { images, setImages, initialized, setInitialized } = galleryState
     const fetchID = useRef(0)
 
     // ID will be compared to fetchID
@@ -69,6 +85,10 @@ export default function Gallery({ urls }: GalleryProps) {
     }
 
     useEffect(() => {
+        if (initialized) {
+            return
+        }
+        setInitialized(true)
         const id = +new Date()
         fetchID.current = id
         fetchImages(id)
