@@ -95,9 +95,11 @@
         background-color: var(--green);
         color: var(--green);
     }
+
     &::before {
         left: -1.5em;
     }
+
     &::after {
         left: 1.5em;
     }

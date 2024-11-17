@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import Seekbar from './seekbar'
 import style from './music.module.scss'
 import pauseButton from '../../../img/pause.svg'

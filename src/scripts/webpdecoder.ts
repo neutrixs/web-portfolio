@@ -76,6 +76,7 @@ abstract class VP8Base {
     }
 
     abstract decode(): this
+
     getDimension(): Size {
         return {
             width: this.width,

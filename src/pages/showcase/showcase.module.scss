@@ -50,6 +50,7 @@
 
     & > div {
         @include hide();
+
         &:nth-child(even) {
             transform: translate(50%, 0);
         }

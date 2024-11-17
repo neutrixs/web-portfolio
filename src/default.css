@@ -36,6 +36,7 @@ body {
     align-items: center;
     margin: 1.5em 0;
 }
+
 @keyframes b {
     0% {
         background-color: #ffffff;
@@ -45,6 +46,7 @@ body {
         background-color: #808080;
     }
 }
+
 .c {
     position: relative;
     width: 1em;
@@ -55,6 +57,7 @@ body {
     animation: b 0.5s infinite linear alternate;
     animation-delay: 0.25s;
 }
+
 .c::before,
 .c::after {
     content: '';
@@ -68,10 +71,12 @@ body {
     color: #202020;
     animation: b 0.5s infinite alternate;
 }
+
 .c::before {
     left: -1.5em;
     animation-delay: 0s;
 }
+
 .c::after {
     left: 1.5em;
     animation-delay: 0.5s;
@@ -90,10 +95,12 @@ body {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                    supported by Chrome, Edge, Opera and Firefox */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                       supported by Chrome, Edge, Opera and Firefox */
     -webkit-tap-highlight-color: transparent;
 }
+
 .noSelect:focus {
     outline: none !important;
 }
