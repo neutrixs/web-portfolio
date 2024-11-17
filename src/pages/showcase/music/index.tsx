@@ -10,13 +10,19 @@ import React, {
 } from 'react'
 import Controller from './controller'
 import songsData, { LineData, PauseData, WordData } from './lyrics'
+import Colorthief from '@neutrixs/colorthief'
 import style from './music.module.scss'
+import { brightness, hsl2rgb, rgb2hsl, rgb2hsv } from '../../../scripts/util'
 
 const TIME_TOLERANCE_S = 0.2
+
+type color = ReturnType<Colorthief['getColor']>
 
 interface props {
     audio: React.MutableRefObject<HTMLAudioElement>
     musicState: ReturnType<typeof useMusicRestoreState>
+    setUsingCustomColor: React.Dispatch<React.SetStateAction<boolean>>
+    setCustomColor: React.Dispatch<React.SetStateAction<string>>
 }
 
 interface LineProps {
@@ -78,6 +84,57 @@ function getIndexAtCurrentTime(data: (PauseData | LineData)[] | WordData[], t: n
     )
 }
 
+function sortBySaturation(colors: color[]) {
+    const copy = [...colors]
+    return copy.sort((a, b) => {
+        const { S: S1 } = rgb2hsv(a[0], a[1], a[2])
+        const { S: S2 } = rgb2hsv(b[0], b[1], b[2])
+        return S2 - S1
+    })
+}
+
+function sortByBrightness(colors: color[], target: number) {
+    const copy = [...colors]
+    return copy.sort((a, b) => {
+        const P1 = brightness(a[0] / 255, a[1] / 255, a[2] / 255)
+        const P2 = brightness(b[0] / 255, b[1] / 255, b[2] / 255)
+
+        return Math.abs(P1 - target) - Math.abs(P2 - target)
+    })
+}
+
+function decreaseBrightness(color: color, target: number): color {
+    const b = brightness(color[0] / 255, color[1] / 255, color[2] / 255)
+    const { H, S, L } = rgb2hsl(color[0] / 255, color[1] / 255, color[2] / 255)
+    if (b <= target) return color
+    let diff = b - target
+    let min = 0
+    let max = L
+    let R = 0
+    let G = 0
+    let B = 0
+
+    while (diff > 0.01) {
+        const middle = (min + max) / 2
+        const rgb = hsl2rgb(H, S, middle)
+        R = rgb.R
+        G = rgb.G
+        B = rgb.B
+        const b = brightness(R, G, B)
+        if (b < target) {
+            min = middle
+        } else {
+            max = middle
+        }
+
+        diff = b - target
+    }
+
+    return [R * 255, G * 255, B * 255]
+}
+
+;(window as any).k = decreaseBrightness
+
 export function useMusicRestoreState() {
     const [songIndex, setSongIndex] = useState(0)
     const [initialized, setInitialized] = useState(false)
@@ -93,19 +150,38 @@ export function useMusicRestoreState() {
     )
 }
 
-const Music = memo(({ audio, musicState }: props) => {
+const Music = memo(({ audio, musicState, setCustomColor, setUsingCustomColor }: props) => {
     const { initialized, setInitialized, songIndex, setSongIndex } = musicState
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
     const [first, setFirst] = useState(true)
     const songIndexRef = useRef(songIndex)
     const containerRef = useRef<HTMLDivElement>(null)
+    const imgCoverRef = useRef<HTMLImageElement>(null!)
 
     const ctimeOverriden = useRef(false)
     const ctimeOverride = useRef(0)
 
+    useEffect(() => {
+        const thief = new Colorthief()
+
+        function imgOnLoad() {
+            const palette = thief.getPalette(imgCoverRef.current, 5)
+            const mostSaturated = sortBySaturation(palette).slice(0, 3)
+            const sorted = sortByBrightness(mostSaturated, 0.5)
+            const adjusted = decreaseBrightness(sorted[0], 0.5)
+            setUsingCustomColor(true)
+            setCustomColor(`rgb(${adjusted.join(',')})`)
+        }
+
+        imgCoverRef.current.addEventListener('load', imgOnLoad)
+        return () => {
+            setUsingCustomColor(false)
+            imgCoverRef.current?.removeEventListener('load', imgOnLoad)
+        }
+    }, [])
+
     useLayoutEffect(() => {
-        setFirst(false)
         if (first && initialized) {
             return
         }
@@ -131,6 +207,7 @@ const Music = memo(({ audio, musicState }: props) => {
 
     useEffect(() => {
         setInitialized(true)
+        setFirst(false)
         const interval = setInterval(stateUpdater, 100)
         return () => clearInterval(interval)
     }, [])
@@ -172,6 +249,7 @@ const Music = memo(({ audio, musicState }: props) => {
         <div className={style.container}>
             <div className={style.info}>
                 <img
+                    ref={imgCoverRef}
                     alt={songsData[songIndex].title + ' album cover'}
                     src={songsData[songIndex].coverURL}
                 />
