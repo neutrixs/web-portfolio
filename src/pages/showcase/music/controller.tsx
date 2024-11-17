@@ -15,15 +15,19 @@ interface props {
 const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverriden, skip }: props) {
     const [isPlaying, setIsPlaying] = useState(!audio.current.paused)
     const [progress, setProgress] = useState(audio.current.currentTime / audio.current.duration)
+    const [remainingMode, setRemainingMode] = useState(true)
     const isSeeking = useRef(false)
     const controllerSeek = useRef<HTMLDivElement>(null)
     const REAL_DURATION_NO_NAN = isNaN(audio.current.duration) ? 0 : audio.current.duration
 
     const gridTemplate = `${progress * 100}% ${100 - progress * 100}%`
+    const duration = remainingMode
+        ? progress * REAL_DURATION_NO_NAN - REAL_DURATION_NO_NAN
+        : REAL_DURATION_NO_NAN
 
     function formatTime(seconds: number) {
-        const minutes = Math.floor(seconds / 60)
-        const secs = seconds % 60
+        const minutes = Math.floor(Math.abs(seconds / 60))
+        const secs = Math.abs(seconds % 60)
         return `${minutes}:${secs.toString().padStart(2, '0')}`
     }
 
@@ -120,7 +124,9 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
                 </div>
                 <div className={style.progressTime}>
                     <p>{formatTime(Math.floor(progress * REAL_DURATION_NO_NAN))}</p>
-                    <p>{formatTime(Math.floor(REAL_DURATION_NO_NAN))}</p>
+                    <p onClick={() => setRemainingMode((m) => !m)}>
+                        {(remainingMode ? '-' : '') + formatTime(Math.floor(duration))}
+                    </p>
                 </div>
             </div>
         </div>
