@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import style from './gallery.module.scss'
 import Layout, { imageMetadata } from './layout'
 import WebPDecoder, { Size } from '../../../scripts/webpdecoder'
@@ -33,36 +33,26 @@ async function getMeta(url: string) {
 
 export function useGalleryRestoreState() {
     const [images, setImages] = useState<imageMetadata[]>([])
+    const [urls, setUrls] = useState<string[]>([])
     const [initialized, setInitialized] = useState(false)
 
-    return useMemo(
-        () => ({
-            images,
-            setImages,
-            initialized,
-            setInitialized,
-        }),
-        [images, setImages, initialized, setInitialized],
-    )
-}
+    useEffect(() => {
+        getImagesURLs().then((u) => setUrls(u))
+    }, [])
 
-export default function Gallery({ urls, galleryState }: GalleryProps) {
-    const { images, setImages, initialized, setInitialized } = galleryState
-    const fetchID = useRef(0)
-
-    // ID will be compared to fetchID
-    // if it's not the same, the execution will stop
-    // useful in case of sudden detach and re-attach
-    async function fetchImages(id: number) {
+    useEffect(() => {
         // TODO: support other image formats too
-        const listToUse = urls?.current ? urls.current : await getImagesURLs()
-        const imgLists = listToUse.filter((u) => u.endsWith('.webp'))
+        if (urls.length == 0) return
+
+        let shouldStillRun = true
+
+        const imgLists = urls.filter((u) => u.endsWith('.webp'))
         const tmpImages: imageMetadata[] = []
         let schedulerID = setTimeout(() => {})
         let lastScheduleTime = 0
 
         function fetchCallback(i: number, size: Size) {
-            if (id != fetchID.current) return
+            if (!shouldStillRun) return
             tmpImages[i] = { url: imgLists[i], ratio: size.width / size.height }
 
             const ctime = +new Date()
@@ -82,16 +72,32 @@ export default function Gallery({ urls, galleryState }: GalleryProps) {
         for (let i = 0; i < imgLists.length; i++) {
             getMeta(imgLists[i]).then((size) => fetchCallback(i, size))
         }
-    }
+
+        return () => {
+            clearTimeout(schedulerID)
+            shouldStillRun = false
+        }
+    }, [urls])
+
+    return useMemo(
+        () => ({
+            images,
+            setImages,
+            initialized,
+            setInitialized,
+        }),
+        [images, setImages, initialized, setInitialized],
+    )
+}
+
+export default function Gallery({ galleryState }: GalleryProps) {
+    const { images, initialized, setInitialized } = galleryState
 
     useEffect(() => {
         if (initialized) {
             return
         }
         setInitialized(true)
-        const id = +new Date()
-        fetchID.current = id
-        fetchImages(id)
     }, [])
 
     return (

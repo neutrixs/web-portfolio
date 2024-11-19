@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import songsData from './music/lyrics'
 import Music, { useMusicRestoreState } from './music'
-import Gallery, { getImagesURLs, useGalleryRestoreState } from './gallery'
+import Gallery, { useGalleryRestoreState } from './gallery'
 
 import style from './showcase.module.scss'
 import galleryIcon from '../../img/gallery.svg'
@@ -29,13 +29,8 @@ export default function Showcase({ height, inView }: props) {
     const musicState = useMusicRestoreState()
     const galleryState = useGalleryRestoreState()
     const audio = useRef(new Audio(songsData[0].audioURL))
-    const urls = useRef<string[]>([])
 
     const { setScrollable } = useContext(ScrollableContext)
-
-    useEffect(() => {
-        getImagesURLs().then((u) => (urls.current = u))
-    }, [])
 
     useEffect(() => {
         if (inView) {
@@ -72,7 +67,7 @@ export default function Showcase({ height, inView }: props) {
     function subpanelContent(): ReactNode {
         switch (subpanelID) {
             case subpanelMenus.gallery:
-                return <Gallery {...{ urls, galleryState }} />
+                return <Gallery {...{ galleryState }} />
             case subpanelMenus.music:
                 return <Music {...{ audio, musicState }} />
             default:
