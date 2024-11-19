@@ -31,7 +31,7 @@ async function getMeta(url: string) {
     return image.decoder.decode().getDimension()
 }
 
-export function useGalleryRestoreState() {
+export function useGalleryRestoreState(allowRunning?: boolean) {
     const [images, setImages] = useState<imageMetadata[]>([])
     const [urls, setUrls] = useState<string[]>([])
     const [initialized, setInitialized] = useState(false)
@@ -42,7 +42,8 @@ export function useGalleryRestoreState() {
 
     useEffect(() => {
         // TODO: support other image formats too
-        if (urls.length == 0) return
+        if (urls.length == 0 || allowRunning === false || initialized) return
+        setInitialized(true)
 
         let shouldStillRun = true
 
@@ -77,28 +78,13 @@ export function useGalleryRestoreState() {
             clearTimeout(schedulerID)
             shouldStillRun = false
         }
-    }, [urls])
+    }, [urls, allowRunning])
 
-    return useMemo(
-        () => ({
-            images,
-            setImages,
-            initialized,
-            setInitialized,
-        }),
-        [images, setImages, initialized, setInitialized],
-    )
+    return useMemo(() => ({ images }), [images])
 }
 
 export default function Gallery({ galleryState }: GalleryProps) {
-    const { images, initialized, setInitialized } = galleryState
-
-    useEffect(() => {
-        if (initialized) {
-            return
-        }
-        setInitialized(true)
-    }, [])
+    const { images } = galleryState
 
     return (
         <div className={style.container}>

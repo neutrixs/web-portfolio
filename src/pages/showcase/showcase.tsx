@@ -31,7 +31,7 @@ export default function Showcase({ height, inView }: props) {
     const [usingCustomColor, setUsingCustomColor] = useState(false)
     const [customColor, setCustomColor] = useState('')
     const musicState = useMusicRestoreState()
-    const galleryState = useGalleryRestoreState()
+    const galleryState = useGalleryRestoreState(inView)
     const audio = useRef(new Audio(songsData[0].audioURL))
 
     const { setScrollable } = useContext(ScrollableContext)
