@@ -18,6 +18,55 @@ export function sleep(ms: number) {
 }
 
 /**
+ * @param r - [0,1]
+ * @param g - [0,1]
+ * @param b - [0,1]
+ * @return {H, S, V} - Where H in [0,360] and S, L in [0,1]
+ */
+export function rgb2hsv(r: number, g: number, b: number) {
+    let v = Math.max(r, g, b),
+        c = v - Math.min(r, g, b)
+    let h = c && (v == r ? (g - b) / c : v == g ? 2 + (b - r) / c : 4 + (r - g) / c)
+    return { H: 60 * (h < 0 ? h + 6 : h), S: v && c / v, V: v }
+}
+
+/**
+ * @param r - [0,1]
+ * @param g - [0,1]
+ * @param b - [0,1]
+ * @return {H, S, L} - Where H in [0,360] and S, L in [0,1]
+ */
+export function rgb2hsl(r: number, g: number, b: number) {
+    let v = Math.max(r, g, b),
+        c = v - Math.min(r, g, b),
+        f = 1 - Math.abs(v + v - c - 1)
+    let h = c && (v == r ? (g - b) / c : v == g ? 2 + (b - r) / c : 4 + (r - g) / c)
+    return { H: 60 * (h < 0 ? h + 6 : h), S: f ? c / f : 0, L: (v + v - c) / 2 }
+}
+
+/**
+ * @param h - [0,360]
+ * @param s - [0,1]
+ * @param l - [0,1]
+ * @return {R, G, B} - Where R, G, B in [0,1]
+ */
+export function hsl2rgb(h: number, s: number, l: number) {
+    let a = s * Math.min(l, 1 - l)
+    let f = (n: number, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+    return { R: f(0), G: f(8), B: f(4) }
+}
+
+/**
+ * @param r - [0,1]
+ * @param g - [0,1]
+ * @param b - [0,1]
+ * @return P - [0,1]
+ */
+export function brightness(r: number, g: number, b: number) {
+    return Math.sqrt(0.299 * r ** 2 + 0.587 * g ** 2 + 0.114 * b ** 2)
+}
+
+/**
  *
  * @param em number
  * @param el HTMLElement

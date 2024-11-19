@@ -114,9 +114,8 @@
     gap: 1em;
     padding: 1em;
 
-    background-color: var(--orange);
     color: var(--green);
-    transition: transform 100ms ease-out;
+    transition: transform 100ms ease-out, background-color 1s linear;
 
     &.show {
         transform: translate(0, 0);

@@ -19,6 +19,8 @@ enum subpanelMenus {
     music,
 }
 
+const DEFAULT_BG = 'var(--orange)'
+
 export default function Showcase({ height, inView }: props) {
     const [titleShow, setTitleShow] = useState(false)
     const [galleryShow, setGalleryShow] = useState(false)
@@ -26,6 +28,8 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelShow, setSubpanelShow] = useState(false)
     const [subpanelTitle, setSubpanelTitle] = useState('')
     const [subpanelID, setSubpanelID] = useState(subpanelMenus.gallery)
+    const [usingCustomColor, setUsingCustomColor] = useState(false)
+    const [customColor, setCustomColor] = useState('')
     const musicState = useMusicRestoreState()
     const galleryState = useGalleryRestoreState()
     const audio = useRef(new Audio(songsData[0].audioURL))
@@ -69,7 +73,7 @@ export default function Showcase({ height, inView }: props) {
             case subpanelMenus.gallery:
                 return <Gallery {...{ galleryState }} />
             case subpanelMenus.music:
-                return <Music {...{ audio, musicState }} />
+                return <Music {...{ audio, musicState, setUsingCustomColor, setCustomColor }} />
             default:
                 return null
         }
@@ -100,7 +104,10 @@ export default function Showcase({ height, inView }: props) {
                     </div>
                 </div>
             </div>
-            <div className={style.subPanel + ' ' + (subpanelShow ? style.show : '')}>
+            <div
+                className={style.subPanel + ' ' + (subpanelShow ? style.show : '')}
+                style={{ backgroundColor: usingCustomColor ? customColor : DEFAULT_BG }}
+            >
                 <div className={style.navigation}>
                     <img alt="back button" src={backIcon} onClick={() => setSubpanelShow(false)} />
                     <span>{subpanelTitle}</span>
