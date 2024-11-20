@@ -5,7 +5,7 @@ import BezierEasing from 'bezier-easing'
 
 const SVG_WIDTH_EM = 2
 const LONG_TERM_ANIMATION_INTERVAL_MS = 10
-const WAVES_ANIMATION_DECREMENT = 0.01
+const WAVES_ANIMATION_DECREMENT = 0.008
 const SEEKER_DOT_WIDTH_EM = 1.5
 const STROKE_WIDTH = 1.6
 const BEZIER_CURVES: Point[] = [
@@ -52,7 +52,7 @@ function seekerDotRaiser(seekerElement: HTMLDivElement, waveTranslation: number)
     // waveTranslation advances the x pos for the sin(x) therefore must be accounted here
     // think of x as the progress percentage
     // after that, it's multiplied by 2PI
-    const xRelative = width / waveWidth - waveTranslation / SVG_WIDTH_EM
+    const xRelative = width / waveWidth - (waveTranslation + 0.375) / SVG_WIDTH_EM
     const xPI = xRelative * 2 * Math.PI
 
     // 0.1 because we don't wanna go crazy
