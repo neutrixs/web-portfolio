@@ -1,5 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react'
-import songsData from './music/lyrics'
+import React, { ReactNode, useContext, useEffect, useState } from 'react'
 import Music, { useMusicRestoreState } from './music'
 import Gallery, { useGalleryRestoreState } from './gallery'
 
@@ -30,9 +29,8 @@ export default function Showcase({ height, inView }: props) {
     const [subpanelID, setSubpanelID] = useState(subpanelMenus.gallery)
     const [usingCustomColor, setUsingCustomColor] = useState(false)
     const [customColor, setCustomColor] = useState('')
-    const musicState = useMusicRestoreState()
+    const musicState = useMusicRestoreState(inView)
     const galleryState = useGalleryRestoreState(inView)
-    const audio = useRef(new Audio(songsData[0].audioURL))
 
     const { setScrollable } = useContext(ScrollableContext)
 
@@ -73,7 +71,7 @@ export default function Showcase({ height, inView }: props) {
             case subpanelMenus.gallery:
                 return <Gallery {...{ galleryState }} />
             case subpanelMenus.music:
-                return <Music {...{ audio, musicState, setUsingCustomColor, setCustomColor }} />
+                return <Music {...{ musicState, setUsingCustomColor, setCustomColor }} />
             default:
                 return null
         }

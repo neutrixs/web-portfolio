@@ -1,13 +1,4 @@
-import React, {
-    memo,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react'
+import React, { memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Controller from './controller'
 import songsData, { LineData, PauseData, WordData } from './lyrics'
 import Colorthief from '@neutrixs/colorthief'
@@ -19,7 +10,6 @@ const TIME_TOLERANCE_S = 0.2
 type color = ReturnType<Colorthief['getColor']>
 
 interface props {
-    audio: React.MutableRefObject<HTMLAudioElement>
     musicState: ReturnType<typeof useMusicRestoreState>
     setUsingCustomColor: React.Dispatch<React.SetStateAction<boolean>>
     setCustomColor: React.Dispatch<React.SetStateAction<string>>
@@ -135,12 +125,33 @@ function decreaseBrightness(color: color, target: number): color {
 
 ;(window as any).k = decreaseBrightness
 
-export function useMusicRestoreState() {
+export function useMusicRestoreState(allowRunning?: boolean) {
     const [songIndex, setSongIndex] = useState(0)
     const [initialized, setInitialized] = useState(false)
+    const [loadNow, setLoadNow] = useState(false)
+    const audio = useRef(new Audio())
+
+    useEffect(() => {
+        if (!(allowRunning === false)) {
+            setLoadNow(true)
+        }
+    }, [allowRunning])
+
+    useEffect(() => {
+        if (!loadNow) return
+
+        audio.current.src = songsData[0].audioURL
+        audio.current.load()
+
+        return () => {
+            audio.current.src = ''
+        }
+    }, [loadNow])
+
     // this way, the object ID will only change if the value(s) actually change
     return useMemo(
         () => ({
+            audio,
             songIndex,
             setSongIndex,
             initialized,
@@ -150,8 +161,8 @@ export function useMusicRestoreState() {
     )
 }
 
-const Music = memo(({ audio, musicState, setCustomColor, setUsingCustomColor }: props) => {
-    const { initialized, setInitialized, songIndex, setSongIndex } = musicState
+const Music = memo(({ musicState, setCustomColor, setUsingCustomColor }: props) => {
+    const { audio, initialized, setInitialized, songIndex, setSongIndex } = musicState
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
     const [first, setFirst] = useState(true)
@@ -181,7 +192,7 @@ const Music = memo(({ audio, musicState, setCustomColor, setUsingCustomColor }: 
         }
     }, [])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (first && initialized) {
             return
         }
