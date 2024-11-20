@@ -93,16 +93,16 @@ function sortByBrightness(colors: color[], target: number) {
     })
 }
 
-function decreaseBrightness(color: color, target: number): color {
+function adjustBrightness(color: color, target: number): color {
     const b = brightness(color[0] / 255, color[1] / 255, color[2] / 255)
     const { H, S, L } = rgb2hsl(color[0] / 255, color[1] / 255, color[2] / 255)
-    if (b <= target) return color
-    let diff = b - target
-    let min = 0
-    let max = L
-    let R = 0
-    let G = 0
-    let B = 0
+    const increase = b < target
+    let diff = Math.abs(b - target)
+    let min = increase ? L : 0
+    let max = increase ? 1 : L
+    let R = color[0] / 255
+    let G = color[1] / 255
+    let B = color[2] / 255
 
     while (diff > 0.01) {
         const middle = (min + max) / 2
@@ -117,13 +117,13 @@ function decreaseBrightness(color: color, target: number): color {
             max = middle
         }
 
-        diff = b - target
+        diff = Math.abs(b - target)
     }
 
     return [R * 255, G * 255, B * 255]
 }
 
-;(window as any).k = decreaseBrightness
+;(window as any).k = adjustBrightness
 
 export function useMusicRestoreState(allowRunning?: boolean) {
     const [songIndex, setSongIndex] = useState(0)
@@ -175,12 +175,13 @@ const Music = memo(({ musicState, setCustomColor, setUsingCustomColor }: props) 
 
     useEffect(() => {
         const thief = new Colorthief()
+        const BRIGHTNESS = 0.4
 
         function imgOnLoad() {
             const palette = thief.getPalette(imgCoverRef.current, 5)
             const mostSaturated = sortBySaturation(palette).slice(0, 3)
-            const sorted = sortByBrightness(mostSaturated, 0.5)
-            const adjusted = decreaseBrightness(sorted[0], 0.5)
+            const sorted = sortByBrightness(mostSaturated, BRIGHTNESS)
+            const adjusted = adjustBrightness(sorted[0], BRIGHTNESS)
             setUsingCustomColor(true)
             setCustomColor(`rgb(${adjusted.join(',')})`)
         }
