@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import style from './gallery.module.scss'
 import Layout, { imageMetadata } from './layout'
 import WebPDecoder, { Size } from '../../../scripts/webpdecoder'
@@ -35,9 +35,14 @@ export function useGalleryRestoreState(allowRunning?: boolean) {
     const [images, setImages] = useState<imageMetadata[]>([])
     const [urls, setUrls] = useState<string[]>([])
     const [initialized, setInitialized] = useState(false)
+    const shouldStillFetch = useRef(true)
 
     useEffect(() => {
         getImagesURLs().then((u) => setUrls(u))
+
+        return () => {
+            shouldStillFetch.current = false
+        }
     }, [])
 
     useEffect(() => {
@@ -45,15 +50,13 @@ export function useGalleryRestoreState(allowRunning?: boolean) {
         if (urls.length == 0 || allowRunning === false || initialized) return
         setInitialized(true)
 
-        let shouldStillRun = true
-
         const imgLists = urls.filter((u) => u.endsWith('.webp'))
         const tmpImages: imageMetadata[] = []
         let schedulerID = setTimeout(() => {})
         let lastScheduleTime = 0
 
         function fetchCallback(i: number, size: Size) {
-            if (!shouldStillRun) return
+            if (!shouldStillFetch) return
             tmpImages[i] = { url: imgLists[i], ratio: size.width / size.height }
 
             const ctime = +new Date()
@@ -76,7 +79,6 @@ export function useGalleryRestoreState(allowRunning?: boolean) {
 
         return () => {
             clearTimeout(schedulerID)
-            shouldStillRun = false
         }
     }, [urls, allowRunning])
 
