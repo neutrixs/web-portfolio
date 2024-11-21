@@ -161,7 +161,7 @@ export function useMusicRestoreState(allowRunning?: boolean) {
     )
 }
 
-const Music = memo(({ musicState, setCustomColor, setUsingCustomColor }: props) => {
+function Music({ musicState, setCustomColor, setUsingCustomColor }: props) {
     const { audio, initialized, setInitialized, songIndex, setSongIndex } = musicState
     const [activeLine, setActiveLine] = useState(0)
     const [activeWord, setActiveWord] = useState(0)
@@ -276,6 +276,6 @@ const Music = memo(({ musicState, setCustomColor, setUsingCustomColor }: props) 
             <Controller {...{ audio, ctimeOverride, ctimeOverriden, skip }} />
         </div>
     )
-})
+}
 
-export default Music
+export default memo(Music)

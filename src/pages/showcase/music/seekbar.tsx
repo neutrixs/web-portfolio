@@ -77,7 +77,7 @@ function generateSineWavePath(amount: number, isPlaying: boolean) {
     return path
 }
 
-const Sine = memo((props: SineProps) => {
+const Sine = memo(function SineWave(props: SineProps) {
     const { isPlaying, repeatingWavesAmount, translateWavesEM, animationMultiplier } = props
     const [progress, setProgress] = useState(0)
     const [pathLength, setPathLength] = useState(0)
@@ -115,7 +115,7 @@ const Sine = memo((props: SineProps) => {
     )
 })
 
-const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
+function Seekbar({ isPlaying }: SeekbarProps) {
     const seekerElementRef = useRef(document.createElement('div'))
     const [repeatingWavesAmount, setRepeatingWavesAmount] = useState(1)
     // The SVG contains 2x sine wave, and we only use the right part
@@ -218,6 +218,6 @@ const Seekbar = memo(({ isPlaying }: SeekbarProps) => {
             <div className={style.seekSecond} />
         </>
     )
-})
+}
 
-export default Seekbar
+export default memo(Seekbar)

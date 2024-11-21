@@ -12,7 +12,7 @@ interface props {
     skip: () => void
 }
 
-const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverriden, skip }: props) {
+function Controller({ audio, ctimeOverride, ctimeOverriden, skip }: props) {
     const [isPlaying, setIsPlaying] = useState(!audio.current.paused)
     const [progress, setProgress] = useState(audio.current.currentTime / audio.current.duration)
     const [remainingMode, setRemainingMode] = useState(true)
@@ -131,6 +131,6 @@ const Controller = memo(function Controller({ audio, ctimeOverride, ctimeOverrid
             </div>
         </div>
     )
-})
+}
 
-export default Controller
+export default memo(Controller)
