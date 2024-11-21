@@ -10,7 +10,7 @@ const path = require('path')
 const config = (dev, name) => ({
     mode: dev ? 'development' : 'production',
     entry: {
-        vendors: ['react', 'react-dom/client', 'react-router-dom'],
+        vendors: ['react-scan', 'react', 'react-dom/client', 'react-router-dom'],
         main: {
             import: './src/loader.tsx',
             dependOn: 'vendors',
