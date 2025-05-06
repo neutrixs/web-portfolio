@@ -33,12 +33,16 @@
 }
 
 .content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     gap: 2em;
-    width: 100%;
+    width: calc(100% - 2em);
     place-items: center;
+    margin: 0 2em;
+    // somehow this is needed, otherwise the box-shadow gonna get cropped
+    padding-bottom: 0.5em;
+    overflow-x: scroll;
+    justify-content: center;
 }
 
 .project {
@@ -50,8 +54,8 @@
     background-color: var(--orange);
     color: var(--green);
     padding: 1.25em;
-    width: 100%;
-    max-width: 25em;
+    width: 25em;
+    height: calc(100% - 3em);
     border-radius: 1em;
     box-shadow: 0.5em 0.5em rgba(0, 0, 0, 0.2);
 
@@ -83,12 +87,6 @@
             height: 1em;
             margin-top: 0.1em;
         }
-    }
-}
-
-@media (max-width: 55rem), (max-height: 55rem) {
-    .container {
-        font-size: 1.25em;
     }
 }
 

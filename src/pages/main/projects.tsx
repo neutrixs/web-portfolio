@@ -37,6 +37,7 @@ export default function Projects({ height, inView }: props) {
                         Stats for your Spotify account, including your recently played, top tracks,
                         etc.
                     </span>
+                    <span>Made with React in Typescript</span>
                     <a href={'https://github.com/neutrixs/spotifinfo'} target={'_blank'}>
                         Github
                     </a>
