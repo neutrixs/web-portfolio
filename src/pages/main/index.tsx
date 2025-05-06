@@ -5,6 +5,7 @@ import Showcase from '../showcase/showcase'
 import styles from './index.module.scss'
 import arrow from '../../img/arrow.svg'
 import { ScrollableContext } from '../../context'
+import Projects from './projects'
 
 export default function MainPage() {
     const isTouchDevice = 'ontouchstart' in document.documentElement
@@ -18,7 +19,7 @@ export default function MainPage() {
     }, [scrollable])
 
     const [currentSlide, setCurrentSlide] = useState(0)
-    const slides = [Introduction, About, Showcase]
+    const slides = [Introduction, About, Projects, Showcase]
 
     useEffect(() => {
         const override = parseFloat(localStorage.getItem('_PAGE_NUMBER_OVERRIDE_') ?? '')
