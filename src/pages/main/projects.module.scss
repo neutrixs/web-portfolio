@@ -55,9 +55,11 @@
     background-color: var(--orange);
     color: var(--green);
     padding: 1.25em;
+    min-width: 17em;
     width: 17em;
     border-radius: 1em;
     box-shadow: 0.5em 0.5em rgba(0, 0, 0, 0.2);
+    height: calc(100% - 2.5em);
 
     & > img {
         width: 100%;

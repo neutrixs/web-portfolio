@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import linkIcon from '../../img/open_link.svg'
 import spotifinfoScreenshot from '../../img/screenshot/spotifinfo.png'
+import tictactoeScreenshot from '../../img/screenshot/tictactoe.png'
 import style from './projects.module.scss'
 
 interface props {
@@ -40,6 +41,17 @@ export default function Projects({ height, inView }: props) {
                     <span>Made with React in Typescript</span>
                     <a href={'https://github.com/neutrixs/spotifinfo'} target={'_blank'}>
                         Github
+                    </a>
+                </div>
+                <div className={style.project}>
+                    <img src={tictactoeScreenshot} alt={'Screenshot of Tic Tac Toe'} />
+                    <a
+                        className={style.projTitle}
+                        href={'https://tictactoe.neutrixs.my.id'}
+                        target={'_blank'}
+                    >
+                        <span>Tic-Tac-Toe</span>
+                        <img src={linkIcon} alt={'Open link'} />
                     </a>
                 </div>
             </div>
