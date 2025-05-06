@@ -12,37 +12,22 @@ interface props {
 
 export default function Projects({ height, inView }: props) {
     const [titleShow, setTitleShow] = useState(false)
+    const [contentShow, setContentShow] = useState(false)
 
     useEffect(() => {
         if (inView) {
             setTimeout(() => setTitleShow(true), 300)
+            setTimeout(() => setContentShow(true), 600)
         } else {
             setTitleShow(false)
+            setContentShow(false)
         }
     }, [inView])
 
     return (
         <div className={style.container} style={{ height: `${height}px` }}>
             <p className={style.title + (titleShow ? ` ${style.show}` : '')}>My Projects</p>
-            <div className={style.content}>
-                <div className={style.project}>
-                    <img src={radarScreenshot} alt={'Screenshot of radar'} />
-                    <a
-                        className={style.projTitle}
-                        href={'https://github.com/neutrixs/bmkg-radar'}
-                        target={'_blank'}
-                    >
-                        <span>bmkg-radar</span>
-                        <img src={linkIcon} alt={'Open link'} />
-                    </a>
-                    <span>
-                        An experimental Discord bot for showing weather radar images for Indonesia.
-                    </span>
-                    <span>Written in Rust.</span>
-                    <a href={'https://github.com/neutrixs/bmkg-radar'} target={'_blank'}>
-                        Github
-                    </a>
-                </div>
+            <div className={style.content + ' ' + (contentShow ? style.show : '')}>
                 <div className={style.project}>
                     <img src={spotifinfoScreenshot} alt={'Screenshot of Spotifinfo'} />
                     <a
@@ -59,6 +44,24 @@ export default function Projects({ height, inView }: props) {
                     </span>
                     <span>Made with React in Typescript</span>
                     <a href={'https://github.com/neutrixs/spotifinfo'} target={'_blank'}>
+                        Github
+                    </a>
+                </div>
+                <div className={style.project}>
+                    <img src={radarScreenshot} alt={'Screenshot of radar'} />
+                    <a
+                        className={style.projTitle}
+                        href={'https://github.com/neutrixs/bmkg-radar'}
+                        target={'_blank'}
+                    >
+                        <span>bmkg-radar</span>
+                        <img src={linkIcon} alt={'Open link'} />
+                    </a>
+                    <span>
+                        An experimental Discord bot for showing weather radar images for Indonesia.
+                    </span>
+                    <span>Written in Rust.</span>
+                    <a href={'https://github.com/neutrixs/bmkg-radar'} target={'_blank'}>
                         Github
                     </a>
                 </div>

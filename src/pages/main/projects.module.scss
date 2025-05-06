@@ -43,6 +43,13 @@
     // somehow this is needed, otherwise the box-shadow gonna get cropped
     padding-bottom: 0.5em;
     overflow-x: auto;
+
+    @include hide();
+    transform: translate(50%, 0);
+
+    &.show {
+        @include show();
+    }
 }
 
 .project {
