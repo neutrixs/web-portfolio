@@ -26,6 +26,24 @@ export default function Projects({ height, inView }: props) {
             <p className={style.title + (titleShow ? ` ${style.show}` : '')}>My Projects</p>
             <div className={style.content}>
                 <div className={style.project}>
+                    <img src={radarScreenshot} alt={'Screenshot of radar'} />
+                    <a
+                        className={style.projTitle}
+                        href={'https://github.com/neutrixs/bmkg-radar'}
+                        target={'_blank'}
+                    >
+                        <span>bmkg-radar</span>
+                        <img src={linkIcon} alt={'Open link'} />
+                    </a>
+                    <span>
+                        An experimental Discord bot for showing weather radar images for Indonesia.
+                    </span>
+                    <span>Written in Rust.</span>
+                    <a href={'https://github.com/neutrixs/bmkg-radar'} target={'_blank'}>
+                        Github
+                    </a>
+                </div>
+                <div className={style.project}>
                     <img src={spotifinfoScreenshot} alt={'Screenshot of Spotifinfo'} />
                     <a
                         className={style.projTitle}
@@ -57,24 +75,6 @@ export default function Projects({ height, inView }: props) {
                     <span>A very simple tic-tac-toe game written in vanilla JavaScript.</span>
                     <span>Uses neumorphic UI design.</span>
                     <a href={'https://github.com/neutrixs/tic-tac-toe'} target={'_blank'}>
-                        Github
-                    </a>
-                </div>
-                <div className={style.project}>
-                    <img src={radarScreenshot} alt={'Screenshot of radar'} />
-                    <a
-                        className={style.projTitle}
-                        href={'https://github.com/neutrixs/bmkg-radar'}
-                        target={'_blank'}
-                    >
-                        <span>bmkg-radar</span>
-                        <img src={linkIcon} alt={'Open link'} />
-                    </a>
-                    <span>
-                        An experimental Discord bot for showing weather radar images for Indonesia.
-                    </span>
-                    <span>Written in Rust.</span>
-                    <a href={'https://github.com/neutrixs/bmkg-radar'} target={'_blank'}>
                         Github
                     </a>
                 </div>
