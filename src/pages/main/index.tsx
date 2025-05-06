@@ -18,11 +18,7 @@ export default function MainPage() {
     }, [scrollable])
 
     const [currentSlide, setCurrentSlide] = useState(0)
-    const slides: React.ReactNode[] = [
-        <Introduction key="introduction" inView={currentSlide == 0} height={parentHeight} />,
-        <About key="about" inView={currentSlide == 1} height={parentHeight} />,
-        <Showcase key="showcase" inView={currentSlide == 2} height={parentHeight} />,
-    ]
+    const slides = [Introduction, About, Showcase]
 
     useEffect(() => {
         const override = parseFloat(localStorage.getItem('_PAGE_NUMBER_OVERRIDE_') ?? '')
@@ -110,7 +106,9 @@ export default function MainPage() {
                     className={styles.slidesContainer}
                     style={{ transform: `translateY(${-currentSlide * parentHeight}px)` }}
                 >
-                    {slides}
+                    {slides.map((Slide, index) => (
+                        <Slide key={index} inView={currentSlide === index} height={parentHeight} />
+                    ))}
                 </div>
                 {isTouchDevice && scrollable ? scrollAccessibility() : null}
             </div>
