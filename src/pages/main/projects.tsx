@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import linkIcon from '../../img/open_link.svg'
 import spotifinfoScreenshot from '../../img/screenshot/spotifinfo.png'
 import tictactoeScreenshot from '../../img/screenshot/tictactoe.png'
+import radarScreenshot from '../../img/screenshot/radar.png'
 import style from './projects.module.scss'
 
 interface props {
@@ -52,6 +53,29 @@ export default function Projects({ height, inView }: props) {
                     >
                         <span>Tic-Tac-Toe</span>
                         <img src={linkIcon} alt={'Open link'} />
+                    </a>
+                    <span>A very simple tic-tac-toe game written in vanilla JavaScript.</span>
+                    <span>Uses neumorphic UI design.</span>
+                    <a href={'https://github.com/neutrixs/tic-tac-toe'} target={'_blank'}>
+                        Github
+                    </a>
+                </div>
+                <div className={style.project}>
+                    <img src={radarScreenshot} alt={'Screenshot of radar'} />
+                    <a
+                        className={style.projTitle}
+                        href={'https://github.com/neutrixs/bmkg-radar'}
+                        target={'_blank'}
+                    >
+                        <span>bmkg-radar</span>
+                        <img src={linkIcon} alt={'Open link'} />
+                    </a>
+                    <span>
+                        An experimental Discord bot for showing weather radar images for Indonesia.
+                    </span>
+                    <span>Written in Rust.</span>
+                    <a href={'https://github.com/neutrixs/bmkg-radar'} target={'_blank'}>
+                        Github
                     </a>
                 </div>
             </div>
