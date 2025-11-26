@@ -3,8 +3,6 @@ import style from './gallery.module.scss'
 import Layout, { imageMetadata } from './layout'
 import WebPDecoder, { Size } from '../../../scripts/webpdecoder'
 
-const BASE_URL = 'https://neutrixs.my.id/gallery/'
-
 interface nginxIndexing {
     name: string
     type: string
@@ -18,10 +16,11 @@ interface GalleryProps {
 }
 
 export async function getImagesURLs() {
-    const request = await fetch(BASE_URL)
+    const base = window.location.origin
+    const request = await fetch(base + '/gallery')
     const imagesData = (await request.json()) as nginxIndexing[]
 
-    return imagesData.map((img) => BASE_URL + img.name)
+    return imagesData.map((img) => base + '/gallery/' + img.name)
 }
 
 async function getMeta(url: string) {
